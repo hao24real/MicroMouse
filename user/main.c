@@ -7,8 +7,9 @@
 byte current_direction_global;
 byte current_position_global[2];
 byte maze_array_global[MAZE_SIZE][MAZE_SIZE];
-byte path_global[MAZE_SIZE*MAZE_SIZE];
 byte maze_dist_array_global[MAZE_SIZE][MAZE_SIZE];
+byte path_1_global[MAZE_SIZE*MAZE_SIZE];
+byte path_2_global[MAZE_SIZE*MAZE_SIZE];
 
 int main(void) {
 
@@ -30,8 +31,17 @@ int main(void) {
 		}
 	}
 	
+	for(i = 0 ; i < MAZE_SIZE; i++){
+		SET_B(maze_array_global[i][0],WEST);
+		SET_B(maze_array_global[0][i],NORTH);
+		SET_B(maze_array_global[i][MAZE_SIZE-1], EAST);
+		SET_B(maze_array_global[MAZE_SIZE-1][i], SOUTH);
+	}
+	
+	
+	
 	for (i = 0; i < MAZE_SIZE * MAZE_SIZE; i ++){
-		path_global[i] = 0;
+		path_1_global[i] = 0;
 	}
 	
 	

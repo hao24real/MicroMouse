@@ -98,10 +98,10 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				// For reliable sensor to correct position. we need to read the cloe value only
 			if ((DLSensor > (DL_THRESHOLD+700))&&(DRSensor > (DR_THRESHOLD+700))){
 				if (temp_cnt >200){				
-					ERR = (DLSensor - DRSensor - (LEFT_WALL_DISTANCE - RIGHT_WALL_DISTANCE));
+					ERR = (DLSensor - DRSensor - (LEFT_WALL_DISTANCE - RIGHT_WALL_DISTANCE))/15;
 					// Check if error is valid for correction ( too far from wall)
-						if (ERR > (MAX_ERR+5)) ERR = MAX_ERR+5;
-						if (ERR < -(MAX_ERR+5)) ERR = -(MAX_ERR+5);	
+					if (ERR > (MAX_ERR+5)) ERR = MAX_ERR+5;
+					if (ERR < -(MAX_ERR+5)) ERR = -(MAX_ERR+5);	
 					ERR_LEFT_TO_PID = ERR;
 					ERR_RIGHT_TO_PID = -ERR;
 				} else {
@@ -113,7 +113,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				// CASE 2: have left wall
 			} else	if (DLSensor > (DL_THRESHOLD+700)){
 				if (temp_cnt >200){				
-					ERR = (DLSensor - LEFT_WALL_DISTANCE)/10;
+					ERR = (DLSensor - LEFT_WALL_DISTANCE)/15;
 					// Check if error is valid for correction ( too far from wall)
 					if (ERR < -VALID_ERR){
 						ERR = 0;
@@ -133,7 +133,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				// Case 3: Use right wall for correction
 			} else if (DRSensor > (DR_THRESHOLD+700)){
 				if (temp_cnt >200){				
-					ERR = (DRSensor - RIGHT_WALL_DISTANCE)/10;
+					ERR = (DRSensor - RIGHT_WALL_DISTANCE)/15;
 					// Check if error is valid for correction ( too far from wall)
 					if (ERR < -VALID_ERR){
 						ERR = 0;
@@ -377,7 +377,7 @@ void Controller_frontwall_corecttion(){
 	int right_err;
 	int count = 0;
 	
-	while(count < 700){
+	while(count < 300){
 		readSensor();	
 		left_err = (FRONT_LEFT_WALL_DISTANCE - FLSensor)/25; // 20 work ok
 		right_err = (FRONT_RIGHT_WALL_DISTANCE - FRSensor)/25; // 20 work ok

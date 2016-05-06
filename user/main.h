@@ -54,7 +54,7 @@ extern byte current_position_global[2];
 extern byte maze_array_global[MAZE_SIZE][MAZE_SIZE];
 
 //path in there
-extern byte path_global[MAZE_SIZE*MAZE_SIZE];
-
+extern byte path_1_global[MAZE_SIZE*MAZE_SIZE];
+extern byte path_2_global[MAZE_SIZE*MAZE_SIZE];
 extern byte maze_dist_array_global[MAZE_SIZE][MAZE_SIZE];
 #endif
