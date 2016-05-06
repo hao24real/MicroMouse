@@ -41,7 +41,7 @@
 
 #define START_DIRECTION 0
 
-#define MAZE_SIZE 16
+#define MAZE_SIZE 6
 
 
 typedef unsigned char byte;

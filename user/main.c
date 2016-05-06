@@ -12,10 +12,33 @@ byte maze_dist_array_global[MAZE_SIZE][MAZE_SIZE];
 
 int main(void) {
 
+	byte i;
+	byte j;
 	Controller_hardware_init();
 	current_direction_global = START_DIRECTION;
 	
+	
+	
 	LED4_ON;
+	
+	
+	for(i = 0; i < MAZE_SIZE; i++){
+		for(j = 0; j < MAZE_SIZE; j++){
+			maze_dist_array_global[i][j] = 0;
+			maze_array_global[i][j] = 0;
+		}
+	}
+	
+	for (i = 0; i < MAZE_SIZE * MAZE_SIZE; i ++){
+		path_global[i] = 0;
+	}
+	
+	
+	
+	
+	
+	
+	
 
 
 //	Controller_maze_calibrate();

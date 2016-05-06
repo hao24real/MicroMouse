@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\obj\micromouse.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\obj\micromouse.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Fri May 06 05:26:26 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Fri May 06 07:41:01 2016
 <BR><P>
 <H3>Maximum Stack Usage =        320 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1034,7 +1034,7 @@ Global Symbols
 
 <P><STRONG><a name="[219]"></a>USART_ClearITPendingBit</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, stm32f4xx_usart.o(.text), UNUSED)
 
-<P><STRONG><a name="[83]"></a>main</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, main.o(.text))
+<P><STRONG><a name="[83]"></a>main</STRONG> (Thumb, 106 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = main &rArr; Runner_explore &rArr; Driver_turn_right &rArr; Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
@@ -1243,19 +1243,19 @@ Global Symbols
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_run
 </UL>
 
-<P><STRONG><a name="[ca]"></a>maze_initialize</STRONG> (Thumb, 66 bytes, Stack size 20 bytes, runner.o(.text))
+<P><STRONG><a name="[ca]"></a>maze_initialize</STRONG> (Thumb, 72 bytes, Stack size 20 bytes, runner.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = maze_initialize
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_explore
 </UL>
 
-<P><STRONG><a name="[cb]"></a>maze_floodfill</STRONG> (Thumb, 220 bytes, Stack size 12 bytes, runner.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = maze_floodfill
+<P><STRONG><a name="[cb]"></a>maze_floodfill</STRONG> (Thumb, 276 bytes, Stack size 16 bytes, runner.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = maze_floodfill
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_explore
 </UL>
 
-<P><STRONG><a name="[a7]"></a>Runner_explore</STRONG> (Thumb, 578 bytes, Stack size 16 bytes, runner.o(.text))
+<P><STRONG><a name="[a7]"></a>Runner_explore</STRONG> (Thumb, 622 bytes, Stack size 16 bytes, runner.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = Runner_explore &rArr; Driver_turn_right &rArr; Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;maze_floodfill
@@ -1269,7 +1269,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[cc]"></a>Runner_run</STRONG> (Thumb, 380 bytes, Stack size 0 bytes, runner.o(.text), UNUSED)
+<P><STRONG><a name="[cc]"></a>Runner_run</STRONG> (Thumb, 378 bytes, Stack size 0 bytes, runner.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_check_walls
 <LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_frontwall_correction
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_go_straight
