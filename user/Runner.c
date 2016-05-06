@@ -12,6 +12,19 @@
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
 
+	// Declaration off variables
+	byte walls_ESWN;
+	
+	byte walls_FLBR;
+	
+	// Change_flag for flood fill algorithm
+	byte row_Dest = MAZE_SIZE-1, column_Dest = MAZE_SIZE-1;
+	// Next interested position
+	byte next_position;
+	// neighbor value
+	byte next_dist, east_neighbor, south_neighbor, west_neighbor, north_neighbor;
+
+
 void maze_initialize(byte row_Dest, byte column_Dest){
 	byte row, column;
 	
@@ -71,17 +84,7 @@ void maze_floodfill(){
 void Runner_explore(int speed ){
 	
 
-	// Declaration off variables
-	byte walls_ESWN;
-	
-	byte walls_FLBR;
-	
-	// Change_flag for flood fill algorithm
-	byte row_Dest = MAZE_SIZE-1, column_Dest = MAZE_SIZE-1;
-	// Next interested position
-	byte next_position;
-	// neighbor value
-	byte next_dist, east_neighbor, south_neighbor, west_neighbor, north_neighbor;
+
 	
 	current_position_global[ROW_INDEX] = 0;
 	current_position_global[COLUMN_INDEX] = 0;
@@ -107,11 +110,17 @@ void Runner_explore(int speed ){
 //delay_ms(500);			
 		
 		
+		// Fload fill algorithm
+		maze_floodfill();
+		
 		/* All of the code is for testing only*/
 		walls_FLBR = Driver_check_walls();
 		
 		// Rotate the wall info accordingly to direction
 		walls_ESWN = ROTATE_DIRECT(walls_FLBR, current_direction_global);
+		
+		// Set this cell as visited		
+		SET_B(walls_ESWN,VISITED);
 		
 		// Determine next position. Calculate current position is acctually last position
 		next_dist = maze_dist_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]];
@@ -141,10 +150,7 @@ void Runner_explore(int speed ){
 				next_position = WEST;
 		}
 		
-		
-		
 
-		
 		if (( current_direction_global - next_position)== 0){	
 
 					Driver_go_straight(180, speed);	
@@ -152,13 +158,13 @@ void Runner_explore(int speed ){
 //Driver_go_straight(0, 0);
 //delay_ms(500);
 			
-		}else if ((( current_direction_global - next_position)== 1)||(( current_direction_global - next_position)== 3)){
+		}else if ((( current_direction_global - next_position)== -1)||(( current_direction_global - next_position)== 3)){
 	
-				Driver_go_straight(90, speed);
-				if (READ_B(walls_FLBR, FRONT))
-					Driver_frontwall_correction();
-				Driver_turn_right(0,85, speed);
-				Driver_go_straight(90, speed);
+			Driver_go_straight(90, speed);
+			if (READ_B(walls_FLBR, FRONT))
+				Driver_frontwall_correction();
+			Driver_turn_right(0,85, speed);
+			Driver_go_straight(90, speed);
 
 //Driver_go_straight(0, 0);
 //delay_ms(500);				
@@ -166,7 +172,7 @@ void Runner_explore(int speed ){
 			current_direction_global = RIGHT_DIRECT(current_direction_global);
 			
 			
-		} else if ((( current_direction_global - next_position)== -1)||(( current_direction_global - next_position)== -3)){
+		} else if ((( current_direction_global - next_position)== 1)||(( current_direction_global - next_position)== -3)){
 			
 				Driver_go_straight(90, speed);
 				if (READ_B(walls_FLBR, FRONT))
@@ -194,11 +200,7 @@ void Runner_explore(int speed ){
 //delay_ms(500);	
 
 			current_direction_global = BACK_DIRECT(current_direction_global);
-
 		}
-		
-		// Set this cell as visited		
-		SET_B(walls_ESWN,VISITED);
 		
 		// Update the maze info
 		maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]] = walls_ESWN;
@@ -216,16 +218,8 @@ void Runner_explore(int speed ){
 			case NORTH: 	current_position_global[ROW_INDEX]--;
 										break;
 			
-		}
-		
-		
-		// Fload fill algorithm
-		maze_floodfill();
-			
+		}	
 	}
-		
-	
-	
 }
 
 	

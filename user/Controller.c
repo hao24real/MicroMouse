@@ -24,11 +24,6 @@ int FLSS;
 int FRSS;
 
 
-	int RD[500];
-	int LD[500];
-	
-	int FL[500];
-	int FR[500];
 
 
 
@@ -101,7 +96,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 			readSensor();;
 				// CASE 1: correct position base on both wall
 				// For reliable sensor to correct position. we need to read the cloe value only
-			if ((FLSensor > (FL_THRESHOLD+500))&&(FRSensor > (FR_THRESHOLD+500))){
+			if ((DLSensor > (DL_THRESHOLD+700))&&(DRSensor > (DR_THRESHOLD+700))){
 				if (temp_cnt >200){				
 					ERR = (DLSensor - DRSensor - (LEFT_WALL_DISTANCE - RIGHT_WALL_DISTANCE));
 					// Check if error is valid for correction ( too far from wall)
@@ -116,7 +111,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				
 				
 				// CASE 2: have left wall
-			} else	if (DLSensor > (DL_THRESHOLD+500)){
+			} else	if (DLSensor > (DL_THRESHOLD+700)){
 				if (temp_cnt >200){				
 					ERR = (DLSensor - LEFT_WALL_DISTANCE)/10;
 					// Check if error is valid for correction ( too far from wall)
@@ -136,7 +131,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				
 				
 				// Case 3: Use right wall for correction
-			} else if (DRSensor > (DR_THRESHOLD+500)){
+			} else if (DRSensor > (DR_THRESHOLD+700)){
 				if (temp_cnt >200){				
 					ERR = (DRSensor - RIGHT_WALL_DISTANCE)/10;
 					// Check if error is valid for correction ( too far from wall)
@@ -195,6 +190,16 @@ byte Controller_check_walls(){
 void Controller_maze_calibrate(){
 	
 
+	// THESE VARIABLES SHOULD BE IN GLOBAL>>
+	// PUT HERE FOR TESTIG>>
+		int RD[500];
+	int LD[500];
+	
+	int FL[500];
+	int FR[500];
+
+	
+	
 	
 	int count, num;
 	int sum;

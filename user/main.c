@@ -15,6 +15,7 @@ int main(void) {
 	byte i;
 	byte j;
 	Controller_hardware_init();
+	
 	current_direction_global = START_DIRECTION;
 	
 	

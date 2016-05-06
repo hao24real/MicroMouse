@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\obj\micromouse.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\obj\micromouse.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Fri May 06 07:41:01 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Fri May 06 10:42:45 2016
 <BR><P>
 <H3>Maximum Stack Usage =        320 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -295,7 +295,7 @@ Global Symbols
 <P><STRONG><a name="[15a]"></a>__rt_entry_postsh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000009))
 
 <P><STRONG><a name="[82]"></a>__rt_entry_main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000D))
-<BR><BR>[Stack]<UL><LI>Max Depth = 148 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 132 + Unknown Stack Size
 <LI>Call Chain = __rt_entry_main &rArr; main &rArr; Runner_explore &rArr; Driver_turn_right &rArr; Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -1035,7 +1035,7 @@ Global Symbols
 <P><STRONG><a name="[219]"></a>USART_ClearITPendingBit</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, stm32f4xx_usart.o(.text), UNUSED)
 
 <P><STRONG><a name="[83]"></a>main</STRONG> (Thumb, 106 bytes, Stack size 0 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = main &rArr; Runner_explore &rArr; Driver_turn_right &rArr; Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
+<BR><BR>[Stack]<UL><LI>Max Depth = 132<LI>Call Chain = main &rArr; Runner_explore &rArr; Driver_turn_right &rArr; Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_explore
@@ -1137,7 +1137,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_check_walls
 </UL>
 
-<P><STRONG><a name="[be]"></a>Controller_maze_calibrate</STRONG> (Thumb, 660 bytes, Stack size 16 bytes, controller.o(.text), UNUSED)
+<P><STRONG><a name="[be]"></a>Controller_maze_calibrate</STRONG> (Thumb, 674 bytes, Stack size 8016 bytes, controller.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
 <LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
@@ -1255,8 +1255,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_explore
 </UL>
 
-<P><STRONG><a name="[a7]"></a>Runner_explore</STRONG> (Thumb, 622 bytes, Stack size 16 bytes, runner.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = Runner_explore &rArr; Driver_turn_right &rArr; Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
+<P><STRONG><a name="[a7]"></a>Runner_explore</STRONG> (Thumb, 836 bytes, Stack size 0 bytes, runner.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 132<LI>Call Chain = Runner_explore &rArr; Driver_turn_right &rArr; Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;maze_floodfill
 <LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;maze_initialize
@@ -1269,7 +1269,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[cc]"></a>Runner_run</STRONG> (Thumb, 378 bytes, Stack size 0 bytes, runner.o(.text), UNUSED)
+<P><STRONG><a name="[cc]"></a>Runner_run</STRONG> (Thumb, 362 bytes, Stack size 0 bytes, runner.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_check_walls
 <LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_frontwall_correction
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_go_straight
@@ -1396,9 +1396,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[e7]"></a>inputString</STRONG> (Thumb, 72 bytes, Stack size 32 bytes, usart.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strcmp
-<LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__0scanf
+<BR><BR>[Calls]<UL><LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__0scanf
 <LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+<LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strcmp
 </UL>
 
 <P><STRONG><a name="[ea]"></a>inputDigits</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, usart.o(.text), UNUSED)
@@ -2150,8 +2150,8 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> scanf_char.o(.text)
 </UL>
 <P><STRONG><a name="[12b]"></a>__vfscanf</STRONG> (Thumb, 878 bytes, Stack size 96 bytes, _scanf.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_scanf_string
-<LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_scanf_int
+<BR><BR>[Calls]<UL><LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_scanf_int
+<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_scanf_string
 </UL>
 <BR>[Called By]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__vfscanf_char
 </UL>
