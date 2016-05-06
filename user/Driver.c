@@ -82,6 +82,40 @@ void Driver_turn_right(int distance, int angle, int speed) {
 	
 }
 
+
+void Driver_turn_right_onpost(int angle, int speed){
+	
+	while (!Controller_check_right_wall()){
+		Controller_run(0, 0, speed, speed);
+	}
+	while (Controller_check_right_wall()){
+
+		Controller_run(0, 0, speed, speed);
+	}
+	
+	Controller_run(30*LW_MM2COUNT_RATIO, 30*RW_MM2COUNT_RATIO, speed, speed);
+	Driver_turn_right(90, angle, speed);
+}
+
+
+
+void Driver_turn_left_onpost(int angle, int speed){
+	
+	while (!Controller_check_right_wall()){
+		Controller_run(0, 0, speed, speed);
+	}
+	while (Controller_check_right_wall()){
+
+		Controller_run(0, 0, speed, speed);
+	}
+	
+	Controller_run(30*LW_MM2COUNT_RATIO, 30*RW_MM2COUNT_RATIO, speed, speed);
+	Driver_turn_left(90, angle, speed);
+}
+
+
+
+
 /* return whether successful or not */
 void Driver_go_straight(int distance, int speed) {
 	Controller_run(distance*LW_MM2COUNT_RATIO, distance*RW_MM2COUNT_RATIO, speed, speed);

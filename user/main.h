@@ -12,6 +12,7 @@
 #define RIGHT_DIRECT(p) ((p==3)? 0:p+1)
 #define LEFT_DIRECT(p) ((p==0)? 3:p-1)
 #define BACK_DIRECT(p) ((p==1)? 3:((p==0)? 2:(p-2)))
+#define ROTATE_DIRECT(p, d) (((p << d)|(p >> (4-d))) & 0x0F)  
 
 #define M_PI 31415 //x10^(-4)
 #define E_4	10000 // 10^4
@@ -32,14 +33,21 @@
 #define BACK 2
 #define LEFT 3
 
+#define ROW_INDEX 0
+#define COLUMN_INDEX 1
+
+
 #define START_DIRECTION 0
+
+#define MAZE_SIZE 16
+
 
 typedef unsigned char byte;
 
 
 // Global variables
 extern byte current_direction_global;
-extern byte current_position_global;
-extern int current_location_global[2];
+extern byte current_position_global[2];
+extern byte maze_array_global[MAZE_SIZE][MAZE_SIZE];
 
 #endif

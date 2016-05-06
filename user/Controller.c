@@ -68,8 +68,8 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 
 	
 	if ((left_distance == 0)&&(right_distance == 0)) {
-		setLeftSpeed(0);
-		setRightSpeed(0);
+		setLeftSpeed(left_speed);
+		setRightSpeed(right_speed);
 		return;
 	}
 	
@@ -85,7 +85,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 	setRightSpeed(right_speed);
 	
 	// Calculate the MAX_ERR to send to PID function
-	MAX_ERR = left_speed/18;
+	MAX_ERR = left_speed/10; // 18 before
 	
 	// This line of code can cause trouble if the encoder rigister is overflow
 	// Loop until mice finish the given distance
@@ -102,8 +102,8 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				// CASE 1: correct position base on both wall
 				// For reliable sensor to correct position. we need to read the cloe value only
 			if ((FLSensor > (FL_THRESHOLD+500))&&(FRSensor > (FR_THRESHOLD+500))){
-				if (temp_cnt >500){				
-					ERR = (DLSensor - DRSensor - (LEFT_WALL_DISTANCE - RIGHT_WALL_DISTANCE))/10;
+				if (temp_cnt >200){				
+					ERR = (DLSensor - DRSensor - (LEFT_WALL_DISTANCE - RIGHT_WALL_DISTANCE));
 					// Check if error is valid for correction ( too far from wall)
 						if (ERR > (MAX_ERR+5)) ERR = MAX_ERR+5;
 						if (ERR < -(MAX_ERR+5)) ERR = -(MAX_ERR+5);	
@@ -117,7 +117,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				
 				// CASE 2: have left wall
 			} else	if (DLSensor > (DL_THRESHOLD+500)){
-				if (temp_cnt >500){				
+				if (temp_cnt >200){				
 					ERR = (DLSensor - LEFT_WALL_DISTANCE)/10;
 					// Check if error is valid for correction ( too far from wall)
 					if (ERR < -VALID_ERR){
@@ -137,7 +137,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				
 				// Case 3: Use right wall for correction
 			} else if (DRSensor > (DR_THRESHOLD+500)){
-				if (temp_cnt >500){				
+				if (temp_cnt >200){				
 					ERR = (DRSensor - RIGHT_WALL_DISTANCE)/10;
 					// Check if error is valid for correction ( too far from wall)
 					if (ERR < -VALID_ERR){

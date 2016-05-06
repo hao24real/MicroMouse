@@ -14,6 +14,11 @@ void Driver_turn_right(int distance, int angle, int speed);
 
 void Driver_go_straight(int distance, int speed);
 
+void Driver_turn_right_onpost(int angle, int speed);
+
+void Driver_turn_left_onpost(int angle, int speed);
+
+
 void Driver_frontwall_correction(void);
 
 byte Driver_check_walls(void );
