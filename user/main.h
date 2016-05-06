@@ -33,6 +33,8 @@
 #define BACK 2
 #define LEFT 3
 
+#define VISITED 4
+
 #define ROW_INDEX 0
 #define COLUMN_INDEX 1
 
@@ -48,6 +50,11 @@ typedef unsigned char byte;
 // Global variables
 extern byte current_direction_global;
 extern byte current_position_global[2];
+//bit indicate wall info and visited
 extern byte maze_array_global[MAZE_SIZE][MAZE_SIZE];
 
+//path in there
+extern byte path_global[MAZE_SIZE*MAZE_SIZE];
+
+extern byte maze_dist_array_global[MAZE_SIZE][MAZE_SIZE];
 #endif

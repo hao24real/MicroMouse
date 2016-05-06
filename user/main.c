@@ -7,8 +7,8 @@
 byte current_direction_global;
 byte current_position_global[2];
 byte maze_array_global[MAZE_SIZE][MAZE_SIZE];
-byte path_1_global[MAZE_SIZE*MAZE_SIZE];
-byte path_2_global[MAZE_SIZE*MAZE_SIZE];
+byte path_global[MAZE_SIZE*MAZE_SIZE];
+byte maze_dist_array_global[MAZE_SIZE][MAZE_SIZE];
 
 int main(void) {
 
@@ -24,12 +24,12 @@ int main(void) {
 	
 //	delay_ms(10000);
 	
-	Runner_run(150);
+//	Runner_run(150);
 	
 	while(1) {
 		
-	//Runner_explore();
+	Runner_explore(35);
 
-		delay_ms(2);
+		delay_ms(10000);
 	}
 }

@@ -54,3 +54,4 @@
 ..\obj\runner.o: ..\user_Libraries\inc\buzzer.h
 ..\obj\runner.o: ..\user\main.h
 ..\obj\runner.o: ..\user_Libraries\inc\adc.h
+..\obj\runner.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
