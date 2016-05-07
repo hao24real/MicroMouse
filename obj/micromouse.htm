@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\obj\micromouse.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\obj\micromouse.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Fri May 06 15:15:28 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Fri May 06 17:49:20 2016
 <BR><P>
 <H3>Maximum Stack Usage =        320 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -480,7 +480,8 @@ Global Symbols
 <P><STRONG><a name="[18a]"></a>GPIO_ReadOutputData</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, stm32f4xx_gpio.o(.text), UNUSED)
 
 <P><STRONG><a name="[b4]"></a>GPIO_SetBits</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f4xx_gpio.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Controller_hardware_init
+<BR><BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_explore
+<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Controller_hardware_init
 <LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lowBatCheck
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clearScreen
 <LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;displayMatrix
@@ -489,7 +490,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[a6]"></a>GPIO_ResetBits</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f4xx_gpio.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR><BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_explore
+<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lowBatCheck
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clearScreen
 <LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;displayMatrix
@@ -1034,7 +1036,7 @@ Global Symbols
 
 <P><STRONG><a name="[219]"></a>USART_ClearITPendingBit</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, stm32f4xx_usart.o(.text), UNUSED)
 
-<P><STRONG><a name="[83]"></a>main</STRONG> (Thumb, 194 bytes, Stack size 0 bytes, main.o(.text))
+<P><STRONG><a name="[83]"></a>main</STRONG> (Thumb, 176 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 132<LI>Call Chain = main &rArr; Runner_explore &rArr; Driver_turn_right &rArr; Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
@@ -1113,7 +1115,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[b7]"></a>Controller_run</STRONG> (Thumb, 392 bytes, Stack size 48 bytes, controller.o(.text))
+<P><STRONG><a name="[b7]"></a>Controller_run</STRONG> (Thumb, 396 bytes, Stack size 48 bytes, controller.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 92<LI>Call Chain = Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setRightSpeed
@@ -1129,7 +1131,7 @@ Global Symbols
 <LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_turn_left
 </UL>
 
-<P><STRONG><a name="[bd]"></a>Controller_check_walls</STRONG> (Thumb, 62 bytes, Stack size 8 bytes, controller.o(.text))
+<P><STRONG><a name="[bd]"></a>Controller_check_walls</STRONG> (Thumb, 66 bytes, Stack size 8 bytes, controller.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = Controller_check_walls &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readSensor
@@ -1137,7 +1139,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_check_walls
 </UL>
 
-<P><STRONG><a name="[be]"></a>Controller_maze_calibrate</STRONG> (Thumb, 676 bytes, Stack size 8016 bytes, controller.o(.text), UNUSED)
+<P><STRONG><a name="[be]"></a>Controller_maze_calibrate</STRONG> (Thumb, 674 bytes, Stack size 8016 bytes, controller.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
 <LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
@@ -1157,7 +1159,7 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readSensor
 </UL>
 
-<P><STRONG><a name="[c1]"></a>Controller_check_front_wall</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, controller.o(.text), UNUSED)
+<P><STRONG><a name="[c1]"></a>Controller_check_front_wall</STRONG> (Thumb, 36 bytes, Stack size 8 bytes, controller.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readSensor
 </UL>
 
@@ -1249,16 +1251,19 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_explore
 </UL>
 
-<P><STRONG><a name="[cb]"></a>maze_floodfill</STRONG> (Thumb, 304 bytes, Stack size 20 bytes, runner.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = maze_floodfill
+<P><STRONG><a name="[cb]"></a>maze_floodfill</STRONG> (Thumb, 272 bytes, Stack size 16 bytes, runner.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = maze_floodfill
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_explore
 </UL>
 
-<P><STRONG><a name="[a7]"></a>Runner_explore</STRONG> (Thumb, 796 bytes, Stack size 0 bytes, runner.o(.text))
+<P><STRONG><a name="[a7]"></a>Runner_explore</STRONG> (Thumb, 1044 bytes, Stack size 0 bytes, runner.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 132<LI>Call Chain = Runner_explore &rArr; Driver_turn_right &rArr; Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;maze_floodfill
+<BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
+<LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
+<LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
+<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;maze_floodfill
 <LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;maze_initialize
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_check_walls
 <LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_frontwall_correction
@@ -1299,7 +1304,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[a8]"></a>delay_ms</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, delay.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Controller_hardware_init
+<BR><BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_explore
+<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Controller_hardware_init
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lowBatCheck
 <LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;displayMatrixScroll

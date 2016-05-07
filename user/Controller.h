@@ -17,9 +17,9 @@
 #include "adc.h"
 #include "pid.h"
 
-#define FL_THRESHOLD 200
-#define FR_THRESHOLD 300
-#define DL_THRESHOLD 300
+#define FL_THRESHOLD 350
+#define FR_THRESHOLD 550
+#define DL_THRESHOLD 350
 #define DR_THRESHOLD 300
 
 

@@ -10,6 +10,7 @@ byte maze_array_global[MAZE_SIZE][MAZE_SIZE];
 byte maze_dist_array_global[MAZE_SIZE][MAZE_SIZE];
 byte path_1_global[MAZE_SIZE*MAZE_SIZE];
 byte path_2_global[MAZE_SIZE*MAZE_SIZE];
+byte path_3_global[MAZE_SIZE*MAZE_SIZE];
 
 int main(void) {
 
@@ -40,9 +41,9 @@ int main(void) {
 	
 	
 	
-	for (i = 0; i < MAZE_SIZE * MAZE_SIZE; i ++){
-		path_1_global[i] = 0;
-	}
+//	for (i = 0; i < MAZE_SIZE * MAZE_SIZE; i ++){
+//		path_1_global[i] = 0;
+//	}
 	
 	
 	
@@ -62,7 +63,7 @@ int main(void) {
 	
 	while(1) {
 		
-	Runner_explore(35);
+	Runner_explore(135);
 
 		delay_ms(10000);
 	}
