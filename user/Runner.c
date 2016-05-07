@@ -23,7 +23,8 @@
 	byte next_position;
 	// neighbor value
 	byte next_dist, east_neighbor, south_neighbor, west_neighbor, north_neighbor;
-
+	
+	byte path_index;
 
 void maze_initialize(byte row_Dest, byte column_Dest){
 	byte row, column;
@@ -77,6 +78,98 @@ void maze_floodfill(){
 }// end method
 
 
+void store_path(){
+	
+	byte index, min_dist, next_position_local, east_neighbor_dist, west_neighbor_dist, south_neighbor_dist, north_neighbor_dist;
+
+	byte current_direction_local = EAST;
+	
+	maze_floodfill();	
+	
+	//use counter to keep track so we can use the path_1_global as a stack
+	path_index = 0;
+	
+	//initialize the array for turning 
+	for(index = 0; index < MAZE_SIZE * MAZE_SIZE; index++)
+		path_run_global[index] = 0;
+
+	//initialization from origin again
+	current_position_global[ROW_INDEX] = 0;
+	current_position_global[COLUMN_INDEX] = 0;
+
+
+	while(!(current_position_global[ROW_INDEX] == row_Dest && current_position_global[COLUMN_INDEX] == column_Dest)) {
+
+		min_dist = MAZE_SIZE * MAZE_SIZE - 1;	
+	
+		// Check EAST neighbor
+		if (!READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]], EAST)){		
+			east_neighbor_dist = maze_dist_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]+1];
+			if ((min_dist >= east_neighbor_dist) &&
+				  READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]+1], VISITED)){
+				min_dist = east_neighbor_dist;
+				next_position_local = EAST;
+			}
+		}
+		
+		// Check NORTH neighbor
+		if (!READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]], NORTH)){
+			north_neighbor_dist = maze_dist_array_global[current_position_global[ROW_INDEX]-1][current_position_global[COLUMN_INDEX]];
+			if (min_dist > north_neighbor_dist &&
+				  READ_B(maze_array_global[current_position_global[ROW_INDEX-1]][current_position_global[COLUMN_INDEX]], VISITED)){
+				min_dist = north_neighbor_dist;
+				next_position_local = NORTH;
+			}
+		}
+		
+		// Check WEST neighbor
+		if (!READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]], WEST)){
+			west_neighbor_dist = maze_dist_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]-1];
+			if (min_dist > west_neighbor_dist &&
+				  READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]-1], VISITED)){
+				min_dist = west_neighbor_dist;
+				next_position_local = WEST;
+			}
+		}
+
+		// Check SOUTH neighbor
+		if (!READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]], SOUTH)){
+		  south_neighbor_dist = maze_dist_array_global[current_position_global[ROW_INDEX]+1][current_position_global[COLUMN_INDEX]];
+			if (min_dist >= south_neighbor_dist&&
+				  READ_B(maze_array_global[current_position_global[ROW_INDEX+1]][current_position_global[COLUMN_INDEX]], VISITED)){
+				min_dist = south_neighbor_dist;
+				next_position_local = SOUTH;
+			}
+		}
+
+		if(next_position_local == current_direction_local)
+			path_run_global[path_index] = FRONT;
+		else if (next_position_local == RIGHT_DIRECT(current_direction_local))
+			path_run_global[path_index] = RIGHT;
+		else if (next_position_local == LEFT_DIRECT(current_direction_local))
+			path_run_global[path_index] = LEFT;
+		else if (next_position_local == BACK_DIRECT(current_direction_local))
+			path_run_global[path_index] = BACK;
+		
+		current_direction_local = next_position_local;
+		
+		// Update the corrent position global
+		if (current_direction_local == EAST)
+			current_position_global[COLUMN_INDEX]++;
+
+		else if (current_direction_local == SOUTH)
+			current_position_global[ROW_INDEX]++;
+
+		else if (current_direction_local == WEST)
+			current_position_global[COLUMN_INDEX]--;
+
+		else if (current_direction_local == NORTH)
+			current_position_global[ROW_INDEX]--;
+		
+		path_index ++;
+	}
+}
+
 
 
 void Runner_explore(int speed ){
@@ -98,7 +191,9 @@ void Runner_explore(int speed ){
 	
 	// Initialize the maze;
 	maze_initialize(row_Dest, column_Dest);
-	
+	//initialization from origin
+	current_position_global[ROW_INDEX] = 0;
+	current_position_global[COLUMN_INDEX] = 0;
 		
 		// ===========================================================
 		for (i=0;i<MAZE_SIZE; i++)
@@ -118,7 +213,7 @@ void Runner_explore(int speed ){
 
 	Driver_go_straight(90, speed);
 		
-	while (1){
+	while ((current_position_global[ROW_INDEX] != row_Dest)||(current_position_global[COLUMN_INDEX] != column_Dest )){
 
 
 
@@ -131,7 +226,7 @@ void Runner_explore(int speed ){
 		// 2. Update walls info for current position. Set this cell as visited		
 		SET_B(walls_ESWN,VISITED);
 		// Update the maze info
-		maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]] = walls_ESWN;
+		maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]] |= walls_ESWN;
 
 
 		// 3. Flood fill the maze to make sure we can find next position
@@ -176,7 +271,7 @@ void Runner_explore(int speed ){
 		// Check SOUTH neighbor
 		if (!READ_B(walls_ESWN, SOUTH)){
 		  south_neighbor = maze_dist_array_global[current_position_global[ROW_INDEX]+1][current_position_global[COLUMN_INDEX]];
-			if (next_dist >= east_neighbor){
+			if (next_dist >= south_neighbor){
 				next_dist = south_neighbor;
 				next_position = SOUTH;
 			}
@@ -208,7 +303,7 @@ void Runner_explore(int speed ){
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();
-				Driver_turn_left(0,83, speed);
+				Driver_turn_left(0,85, speed);
 				Driver_go_straight(90, speed);
 			
 			
@@ -221,18 +316,19 @@ void Runner_explore(int speed ){
 			// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 			if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();	
-			Driver_turn_left(0,83, speed);
+			Driver_turn_left(0,85, speed);
 			// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 			if (READ_B(walls_FLBR, FRONT))
 				Driver_frontwall_correction();		
-			Driver_turn_left(0,83, speed);
+			Driver_turn_left(0,85, speed);
 			if (READ_B(walls_FLBR, FRONT))
 				Driver_frontwall_correction();			
 			Driver_go_straight(90, speed);
 			
 			
 			current_direction_global = BACK_DIRECT(current_direction_global);
-		} else {
+		} 
+		else {
 			while (1){
 				delay_ms(200);
 				LED3_ON;
@@ -255,9 +351,10 @@ void Runner_explore(int speed ){
 		else if (current_direction_global == NORTH)
 			current_position_global[ROW_INDEX]--;
 
-
-/*
-// ===========================================================
+	} // While loop
+	
+	/*
+	 ===========================================================
 		for (i=0;i<MAZE_SIZE; i++)
 			for (j=0; j<MAZE_SIZE; j++){
 				path_1_global[i*MAZE_SIZE +j]= maze_array_global[i][j];
@@ -267,116 +364,43 @@ void Runner_explore(int speed ){
 		
 		Driver_go_straight(0, 0);
   	delay_ms(1000);
-//==============================================================
-*/		
-	} // While loop
+==============================================================
+	*/
+	//Driver_go_straight(0,0);
+	//delay_ms(1000);
+	
+	Driver_go_straight(90,speed);
+	Driver_go_straight(0,0);
+	
+	//delay_ms(1000);
+	
+	
+	store_path();
+	
 } // End method
 	
 void Runner_run(int speed){
 
-		// Declaration off variables
-	byte walls;
-	int counter = 0;
+		byte path_count;
 	
-	Driver_go_straight(90, speed);
-
-//Driver_go_straight(0, 0);
-//delay_ms(500);	
-	
-	while (1){
-		counter ++;
-		
-//Driver_go_straight(0, 0);
-//delay_ms(500);			
-		
-		
-		/* All of the code is for testing only*/
-		walls = Driver_check_walls();
-		
-		if (!(READ_B(walls, FRONT))){	
-
-						Driver_go_straight(180, speed);	
-			
-//Driver_go_straight(0, 0);
-//delay_ms(500);				
-			
-		}else if(!(READ_B(walls, RIGHT)) && !(READ_B(walls, LEFT))){
-					
-			if(counter & 1){
-			
-				
-				Driver_go_straight(90, speed);
-				Driver_frontwall_correction();
-				Driver_turn_right(0,85, speed);
-				Driver_go_straight(90, speed);
-	
-//Driver_go_straight(0, 0);
-//delay_ms(500);	
-				
-			// Driver_frontwall_correction();
-			current_direction_global = RIGHT_DIRECT(current_direction_global);
-			}else{
-				
-				Driver_go_straight(90, speed);
-				Driver_frontwall_correction();
-				Driver_turn_left(0,83, speed);
-				Driver_go_straight(90, speed);
-			
-//Driver_go_straight(0, 0);
-//delay_ms(500);					
-				
-			
-			current_direction_global = LEFT_DIRECT(current_direction_global);
-				
+	  //path index is the size of the path_run_array
+		for(path_count = 0; path_count < path_index; path_count ++){
+			switch(path_run_global[path_count]){
+				case FRONT:
+					Driver_go_straight(180, speed);
+					break;
+				case RIGHT:
+					Driver_turn_right(0, 90, speed);
+					Driver_go_straight(180, speed);
+					break;
+				case LEFT:
+					Driver_turn_left(0, 90, speed);
+					Driver_go_straight(180, speed);
+					break;
 			}
-			
-		}else if (!(READ_B(walls, RIGHT))){
-	
-				Driver_go_straight(90, speed);
-				Driver_frontwall_correction();
-				Driver_turn_right(0,85, speed);
-				Driver_go_straight(90, speed);
-
-//Driver_go_straight(0, 0);
-//delay_ms(500);				
-			
-			current_direction_global = RIGHT_DIRECT(current_direction_global);
-			
-			
-		} else if (!(READ_B(walls, LEFT))){
-			
-				Driver_go_straight(90, speed);
-				Driver_frontwall_correction();
-				Driver_turn_left(0,83, speed);
-				Driver_go_straight(90, speed);
-			
-			
-			
-			
-			current_direction_global = LEFT_DIRECT(current_direction_global);
-	
-		} else {
-			
-			
-//			Driver_go_straight(45, speed);
-			Driver_go_straight(90, speed);
-			Driver_frontwall_correction();			
-			Driver_turn_left(0,83, speed);
-			Driver_frontwall_correction();			
-			Driver_turn_left(0,83, speed);
-			Driver_go_straight(90, speed);
-			
-//Driver_go_straight(0, 0);
-//delay_ms(500);	
-
-			current_direction_global = BACK_DIRECT(current_direction_global);
-			
-			
-			// Copy data for monitoring
-
 		}
 		
-	}
+		Driver_go_straight(0, 0);
 		
 }
 

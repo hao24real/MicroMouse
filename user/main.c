@@ -11,6 +11,7 @@ byte maze_dist_array_global[MAZE_SIZE][MAZE_SIZE];
 byte path_1_global[MAZE_SIZE*MAZE_SIZE];
 byte path_2_global[MAZE_SIZE*MAZE_SIZE];
 byte path_3_global[MAZE_SIZE*MAZE_SIZE];
+byte path_run_global[MAZE_SIZE * MAZE_SIZE];
 
 int main(void) {
 
@@ -50,7 +51,10 @@ int main(void) {
 	
 	
 	
-	
+	//Driver_turn_right_onpost(180,150);
+	//Driver_go_straight(90,150);
+	//Driver_go_straight(90,150);
+	//Driver_go_straight(0,0);	
 
 
 //	Controller_maze_calibrate();
@@ -61,10 +65,24 @@ int main(void) {
 	
 //	Runner_run(150);
 	
-	while(1) {
+	//while(1) {
 		
-	Runner_explore(135);
+	Runner_explore(40);
 
 		delay_ms(10000);
-	}
+		
+	Runner_run(60);
+//	Runner_explore(65);
+		
+		delay_ms(10000);
+		
+//			Runner_explore(95);
+		
+		//delay_ms(10000);
+		
+	///			Runner_explore(135);
+		
+		//delay_ms(10000);
+		
+	//}
 }

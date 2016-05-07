@@ -35,7 +35,7 @@ void Controller_hardware_init(void) {
 	Systick_Configuration();
 	LED_Configuration();
 	//button_Configuration();
-	//usart1_Configuration(9600);
+	usart1_Configuration(9600);
 	//SPI_Configuration();
   TIM4_PWM_Init();
 	Encoder_Configration();
@@ -80,7 +80,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 	setRightSpeed(right_speed);
 	
 	// Calculate the MAX_ERR to send to PID function
-	MAX_ERR = left_speed/10; // 18 before
+	MAX_ERR = left_speed/15; // 18 before
 	
 	// This line of code can cause trouble if the encoder rigister is overflow
 	// Loop until mice finish the given distance
@@ -96,12 +96,12 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 			readSensor();;
 				// CASE 1: correct position base on both wall
 				// For reliable sensor to correct position. we need to read the cloe value only
-			if ((DLSensor > (DL_THRESHOLD+700))&&(DRSensor > (DR_THRESHOLD+700))){
+			if ((DLSensor > (DL_THRESHOLD+750))&&(DRSensor > (DR_THRESHOLD+750))){
 				if (temp_cnt >200){				
-					ERR = (DLSensor - DRSensor - (LEFT_WALL_DISTANCE - RIGHT_WALL_DISTANCE))/15;
+					ERR = (DLSensor - DRSensor - (LEFT_WALL_DISTANCE - RIGHT_WALL_DISTANCE))/25;
 					// Check if error is valid for correction ( too far from wall)
-					if (ERR > (MAX_ERR+5)) ERR = MAX_ERR+5;
-					if (ERR < -(MAX_ERR+5)) ERR = -(MAX_ERR+5);	
+					if (ERR > (MAX_ERR)) ERR = MAX_ERR;
+					if (ERR < -(MAX_ERR)) ERR = -(MAX_ERR);	
 					ERR_LEFT_TO_PID = ERR;
 					ERR_RIGHT_TO_PID = -ERR;
 				} else {
@@ -111,15 +111,15 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				
 				
 				// CASE 2: have left wall
-			} else	if (DLSensor > (DL_THRESHOLD+700)){
+			} else	if (DLSensor > (DL_THRESHOLD+750)){
 				if (temp_cnt >200){				
-					ERR = (DLSensor - LEFT_WALL_DISTANCE)/15;
+					ERR = (DLSensor - LEFT_WALL_DISTANCE)/25;
 					// Check if error is valid for correction ( too far from wall)
 					if (ERR < -VALID_ERR){
 						ERR = 0;
 					} else{
-						if (ERR > (MAX_ERR+5)) ERR = MAX_ERR+5;
-						if (ERR < -(MAX_ERR+5)) ERR = -(MAX_ERR+5);			
+						if (ERR > (MAX_ERR)) ERR = MAX_ERR;
+						if (ERR < -(MAX_ERR)) ERR = -(MAX_ERR);			
 					}
 					ERR_LEFT_TO_PID = ERR;
 					ERR_RIGHT_TO_PID = -ERR;
@@ -131,15 +131,15 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				
 				
 				// Case 3: Use right wall for correction
-			} else if (DRSensor > (DR_THRESHOLD+700)){
+			} else if (DRSensor > (DR_THRESHOLD+750)){
 				if (temp_cnt >200){				
-					ERR = (DRSensor - RIGHT_WALL_DISTANCE)/15;
+					ERR = (DRSensor - RIGHT_WALL_DISTANCE)/25;
 					// Check if error is valid for correction ( too far from wall)
 					if (ERR < -VALID_ERR){
 						ERR = 0;
 					} else{
-						if (ERR > (MAX_ERR+5)) ERR = MAX_ERR+5;
-						if (ERR < -(MAX_ERR+5)) ERR = -(MAX_ERR+5);			
+						if (ERR > (MAX_ERR)) ERR = MAX_ERR;
+						if (ERR < -(MAX_ERR)) ERR = -(MAX_ERR);			
 					}
 					ERR_LEFT_TO_PID = -ERR;
 					ERR_RIGHT_TO_PID = ERR;
@@ -377,10 +377,10 @@ void Controller_frontwall_corecttion(){
 	int right_err;
 	int count = 0;
 	
-	while(count < 300){
+	while(count < 400){
 		readSensor();	
-		left_err = (FRONT_LEFT_WALL_DISTANCE - FLSensor)/25; // 20 work ok
-		right_err = (FRONT_RIGHT_WALL_DISTANCE - FRSensor)/25; // 20 work ok
+		left_err = (FRONT_LEFT_WALL_DISTANCE - FLSensor)/22; // 20 work ok
+		right_err = (FRONT_RIGHT_WALL_DISTANCE - FRSensor)/22; // 20 work ok
 		if (left_err > 8) left_err = 8;
 		if (left_err < -8) left_err = -8;
 		if (right_err > 8) right_err = 8;

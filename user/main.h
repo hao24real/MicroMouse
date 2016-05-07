@@ -58,4 +58,5 @@ extern byte path_1_global[MAZE_SIZE*MAZE_SIZE];
 extern byte path_2_global[MAZE_SIZE*MAZE_SIZE];
 extern byte path_3_global[MAZE_SIZE*MAZE_SIZE];
 extern byte maze_dist_array_global[MAZE_SIZE][MAZE_SIZE];
+extern byte path_run_global[MAZE_SIZE*MAZE_SIZE];
 #endif
