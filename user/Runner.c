@@ -80,9 +80,14 @@ void maze_floodfill(){
 
 void store_path(){
 	
-	byte index, min_dist, next_position_local, east_neighbor_dist, west_neighbor_dist, south_neighbor_dist, north_neighbor_dist;
+	byte index, current_dist, next_position_local, east_neighbor_dist, west_neighbor_dist, south_neighbor_dist, north_neighbor_dist;
 
 	byte current_direction_local = EAST;
+	
+	LED1_ON;
+	
+	//CLR_B(maze_dist_array_global[row_Dest][column_Dest], VISITED);
+	//maze_dist_array_global[row_Dest][column_Dest] = 0;
 	
 	maze_floodfill();	
 	
@@ -100,14 +105,14 @@ void store_path(){
 
 	while(!(current_position_global[ROW_INDEX] == row_Dest && current_position_global[COLUMN_INDEX] == column_Dest)) {
 
-		min_dist = MAZE_SIZE * MAZE_SIZE - 1;	
 	
+		current_dist = maze_dist_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]];	
+		
 		// Check EAST neighbor
 		if (!READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]], EAST)){		
 			east_neighbor_dist = maze_dist_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]+1];
-			if ((min_dist >= east_neighbor_dist) &&
-				  READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]+1], VISITED)){
-				min_dist = east_neighbor_dist;
+			if ((current_dist == (east_neighbor_dist + 1)) && 
+				READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX] + 1] ,VISITED)) {
 				next_position_local = EAST;
 			}
 		}
@@ -115,9 +120,8 @@ void store_path(){
 		// Check NORTH neighbor
 		if (!READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]], NORTH)){
 			north_neighbor_dist = maze_dist_array_global[current_position_global[ROW_INDEX]-1][current_position_global[COLUMN_INDEX]];
-			if (min_dist > north_neighbor_dist &&
-				  READ_B(maze_array_global[current_position_global[ROW_INDEX-1]][current_position_global[COLUMN_INDEX]], VISITED)){
-				min_dist = north_neighbor_dist;
+			if ((current_dist == (north_neighbor_dist + 1)) && 
+				READ_B(maze_array_global[current_position_global[ROW_INDEX]-1][current_position_global[COLUMN_INDEX]] ,VISITED)){
 				next_position_local = NORTH;
 			}
 		}
@@ -125,9 +129,8 @@ void store_path(){
 		// Check WEST neighbor
 		if (!READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]], WEST)){
 			west_neighbor_dist = maze_dist_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]-1];
-			if (min_dist > west_neighbor_dist &&
-				  READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]-1], VISITED)){
-				min_dist = west_neighbor_dist;
+			if ((current_dist == (west_neighbor_dist + 1)) && 
+				READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]-1] ,VISITED)){
 				next_position_local = WEST;
 			}
 		}
@@ -135,9 +138,8 @@ void store_path(){
 		// Check SOUTH neighbor
 		if (!READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]], SOUTH)){
 		  south_neighbor_dist = maze_dist_array_global[current_position_global[ROW_INDEX]+1][current_position_global[COLUMN_INDEX]];
-			if (min_dist >= south_neighbor_dist&&
-				  READ_B(maze_array_global[current_position_global[ROW_INDEX+1]][current_position_global[COLUMN_INDEX]], VISITED)){
-				min_dist = south_neighbor_dist;
+			if ((current_dist == (south_neighbor_dist + 1))&& 
+				READ_B(maze_array_global[current_position_global[ROW_INDEX]+1][current_position_global[COLUMN_INDEX]] ,VISITED)){
 				next_position_local = SOUTH;
 			}
 		}
@@ -289,7 +291,7 @@ void Runner_explore(int speed ){
 			// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 			if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();
-			Driver_turn_right(0,85, speed);
+			Driver_turn_right(0,88, speed);
 			Driver_go_straight(90, speed);
 
 				
