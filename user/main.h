@@ -53,6 +53,10 @@ extern byte current_position_global[2];
 //bit indicate wall info and visited
 extern byte maze_array_global[MAZE_SIZE][MAZE_SIZE];
 
+// Change_flag for flood fill algorithm
+extern byte row_Dest, column_Dest;
+
+
 //path in there
 extern byte path_1_global[MAZE_SIZE*MAZE_SIZE];
 extern byte path_2_global[MAZE_SIZE*MAZE_SIZE];
