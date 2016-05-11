@@ -52,7 +52,7 @@ void maze_floodfill(){
 				
 				if (READ_B(maze_array_global[row][column], VISITED)){
 					
-						min_neighbor = 255;
+						min_neighbor = MAZE_SIZE * MAZE_SIZE - 1;
 
 						if (!READ_B(maze_array_global[row][column], EAST))
 								if (min_neighbor > maze_dist_array_global[row][column+1])
@@ -90,6 +90,8 @@ void store_path(){
 	//maze_dist_array_global[row_Dest][column_Dest] = 0;
 	
 	maze_floodfill();	
+	SET_B(maze_array_global[row_Dest][column_Dest] ,VISITED);
+	
 	
 	//use counter to keep track so we can use the path_1_global as a stack
 	path_index = 0;
@@ -379,7 +381,7 @@ void Runner_explore(int speed ){
 	
 	//delay_ms(1000);
 	
-	
+	//maze_floodfill();	
 	store_path();
 	
 } // End method
