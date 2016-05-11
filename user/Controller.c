@@ -437,23 +437,28 @@ void Controller_writeFlash(void){
       FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
 			
 			
-	FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
-  FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
-  FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
-  FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
+	FLASH_ProgramHalfWord(LEFT_WALL_DISTANCE_ADRESS, LEFT_WALL_DISTANCE);
+  FLASH_ProgramHalfWord(RIGHT_WALL_DISTANCE_ADRESS, RIGHT_WALL_DISTANCE);
+  FLASH_ProgramHalfWord(FRONT_LEFT_WALL_DISTANCE_ADRESS, FRONT_LEFT_WALL_DISTANCE);
+  FLASH_ProgramHalfWord(FRONT_RIGHT_WALL_DISTANCE_ADRESS,FRONT_RIGHT_WALL_DISTANCE);
 
   FLASH_Lock();
 }
 
 
-void Controller_readFlash(void){
+void Controller_readMazeFlash(void){
   u32 i, j;
   for(i=0; i<MAZE_SIZE; i++)
     for(j=0; j<MAZE_SIZE; j++)
       maze_array_global[i][j] = *(int16_t *)(MAZE_ADRESS + (i*MAZE_SIZE+j)*4);
 }
 
-
+void Controller_readSensorFlash(void){
+  LEFT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
+  RIGHT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
+  FRONT_RIGHT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
+  FRONT_LEFT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
+}
 
 
 

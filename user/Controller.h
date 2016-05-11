@@ -24,11 +24,6 @@
 #define DR_THRESHOLD 300
 
 
-#define ACCELERATION 1
-
-
-
-
 
 void systick(void);
 

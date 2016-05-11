@@ -44,18 +44,14 @@ int main(void) {
 	
 
 	Runner_explore(60);
+
 	delay_ms(1000);
 	
-//	delay_ms(1000);
 
-
+<<<<<<< HEAD
 	delay_ms(10000);
 	Runner_run(90);
 	
-	delay_ms(10000);
-		
-
-
 
 	
 	while(1) {
