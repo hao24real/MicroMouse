@@ -43,6 +43,9 @@ void Driver_turn_left(int distance, int angle, int speed){
 	// Cal propriate Controller method
 	Controller_run(left_cnt, right_cnt, left_spd, right_spd);
 	
+	// Go straingt before return
+	Controller_run(0, 0, speed, speed);
+	
 }
 
 void Driver_turn_right(int distance, int angle, int speed) {
@@ -78,7 +81,12 @@ void Driver_turn_right(int distance, int angle, int speed) {
 		right_spd = -speed;
 	}
 	
+	// COntroller
 	Controller_run(left_cnt, right_cnt, left_spd, right_spd);
+	
+	
+	// Go straingt before return
+	Controller_run(0, 0, speed, speed);
 	
 }
 

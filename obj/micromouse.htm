@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\obj\micromouse.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\obj\micromouse.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sat May 07 06:33:46 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sat May 07 06:45:48 2016
 <BR><P>
 <H3>Maximum Stack Usage =        320 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -485,6 +485,7 @@ Global Symbols
 <LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lowBatCheck
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clearScreen
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;displayMatrix
+<LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;store_path
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readSensor
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Controller_maze_calibrate
 </UL>
@@ -1265,16 +1266,17 @@ Global Symbols
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;store_path
 </UL>
 
-<P><STRONG><a name="[cc]"></a>store_path</STRONG> (Thumb, 624 bytes, Stack size 40 bytes, runner.o(.text))
+<P><STRONG><a name="[cc]"></a>store_path</STRONG> (Thumb, 634 bytes, Stack size 40 bytes, runner.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = store_path &rArr; maze_floodfill
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
+<LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;maze_floodfill
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_explore
 </UL>
 
-<P><STRONG><a name="[a7]"></a>Runner_explore</STRONG> (Thumb, 1094 bytes, Stack size 16 bytes, runner.o(.text))
+<P><STRONG><a name="[a7]"></a>Runner_explore</STRONG> (Thumb, 1096 bytes, Stack size 16 bytes, runner.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = Runner_explore &rArr; Driver_turn_right &rArr; Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms

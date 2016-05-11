@@ -103,7 +103,7 @@ void store_path(){
 	current_position_global[COLUMN_INDEX] = 0;
 
 
-	while(!(current_position_global[ROW_INDEX] == row_Dest && current_position_global[COLUMN_INDEX] == column_Dest)) {
+	while((current_position_global[ROW_INDEX] != row_Dest)||(current_position_global[COLUMN_INDEX] != column_Dest )) {
 
 	
 		current_dist = maze_dist_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]];	
@@ -170,6 +170,9 @@ void store_path(){
 		
 		path_index ++;
 	}
+	
+	
+	LED1_OFF;
 }
 
 

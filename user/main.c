@@ -40,49 +40,20 @@ int main(void) {
 		SET_B(maze_array_global[MAZE_SIZE-1][i], SOUTH);
 	}
 	
-	
-	
-//	for (i = 0; i < MAZE_SIZE * MAZE_SIZE; i ++){
-//		path_1_global[i] = 0;
-//	}
-	
-	
-	
-	
-	
-	
-	//Driver_turn_right_onpost(180,150);
-	//Driver_go_straight(90,150);
-	//Driver_go_straight(90,150);
-	//Driver_go_straight(0,0);	
 
-
-//	Controller_maze_calibrate();
-
-//	Runner_run(40);
-	
-//	delay_ms(10000);
-	
-//	Runner_run(150);
-	
-	//while(1) {
-		
 	Runner_explore(40);
+	delay_ms(10000);
 
-		delay_ms(10000);
-		
 	Runner_run(60);
-//	Runner_explore(65);
+	delay_ms(10000);
 		
-		delay_ms(10000);
+
+
+
+	
+	while(1) {
 		
-//			Runner_explore(95);
+
 		
-		//delay_ms(10000);
-		
-	///			Runner_explore(135);
-		
-		//delay_ms(10000);
-		
-	//}
+	}
 }
