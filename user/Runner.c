@@ -11,6 +11,9 @@
  * Wall is 12mm thick
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
+ 
+	#define LEFT_MOTOR_VALUE 88
+	#define RIGHT_MOTOR_VALUE 88
 
 	// Declaration off variables
 	byte walls_ESWN;
@@ -24,6 +27,7 @@
 	byte next_dist, east_neighbor, south_neighbor, west_neighbor, north_neighbor;
 	
 	byte path_index;
+	
 
 void maze_initialize(byte row_Dest, byte column_Dest){
 	byte row, column;
@@ -34,6 +38,21 @@ void maze_initialize(byte row_Dest, byte column_Dest){
 		}
 	}
 }
+
+// void BFS_floodfill(){
+
+// 	byte end_index;
+// 	byte start_index;
+
+// 	//only terminate when simulation of MM reach 
+// 	while((current_position_global[ROW_INDEX] != 0)
+// 		&& (current_position_global[COLUMN_INDEX] = column_Dest != 0)){
+
+// 	}
+
+// }
+
+
 
 
 void maze_floodfill(){
@@ -265,7 +284,7 @@ void Runner_explore(int speed ){
 			
 			// 3. Find next position. The flood fill just happened after this. So it guaranty a open position for next
 			// 3.a. Determine next position. next_dist here is set default by current distance
-			next_dist = 255;	
+			next_dist = MAZE_SIZE * MAZE_SIZE -1;	
 			
 			// Find the smallest and closet neighbor of current position
 			// Dont use if else statement because we have to go through four neighbor
@@ -318,7 +337,7 @@ void Runner_explore(int speed ){
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();
-				Driver_turn_right(0,88, speed);
+				Driver_turn_right(0,RIGHT_MOTOR_VALUE, speed);
 				Driver_go_straight(90, speed);
 
 					
@@ -332,7 +351,7 @@ void Runner_explore(int speed ){
 					// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 					if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();
-					Driver_turn_left(0,85, speed);
+					Driver_turn_left(0, LEFT_MOTOR_VALUE, speed);
 					Driver_go_straight(90, speed);
 				
 				
@@ -345,11 +364,11 @@ void Runner_explore(int speed ){
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();	
-				Driver_turn_left(0,85, speed);
+				Driver_turn_left(0,LEFT_MOTOR_VALUE, speed);
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();		
-				Driver_turn_left(0,85, speed);
+				Driver_turn_left(0,LEFT_MOTOR_VALUE, speed);
 				if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();			
 				Driver_go_straight(90, speed);
@@ -387,7 +406,7 @@ void Runner_explore(int speed ){
 			if((current_position_global[ROW_INDEX] == row_Dest) && (current_position_global[COLUMN_INDEX] == column_Dest)){
 				 stop = 1;
 			}
-			maze_initialize(row_Dest,column_Dest);
+			//maze_initialize(row_Dest,column_Dest);
 			CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
 	}
 	
