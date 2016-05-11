@@ -259,7 +259,8 @@ void Runner_explore(int speed ){
 	maze_array_global[0][0] = 0x1E;
 	current_position_global[COLUMN_INDEX] ++;
 
-	Driver_go_straight(90, speed);
+		
+		
 	
 	while(!stop) {
 		

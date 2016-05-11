@@ -175,8 +175,6 @@ void SysTick_Handler(void)
 
 void EXTI9_5_IRQHandler(void) {
 	
-	
-	
 	if(EXTI_GetITStatus(EXTI_Line5) != RESET) {
 		//debounce the button
 	  delay_ms(200);
@@ -186,25 +184,16 @@ void EXTI9_5_IRQHandler(void) {
 		EXTI_ClearITPendingBit(EXTI_Line5);
 	}
 	
-	
-	
-}
-
-
-void EXTI15_10_IRQHandler(void) {
-	
-	
-	if(EXTI_GetITStatus(EXTI_Line13) != RESET) 
+	else	if(EXTI_GetITStatus(EXTI_Line8) != RESET) 
   {
 		//debounce the button
 	  delay_ms(200);
 	  
 		button2_interrupt();
 		
-		EXTI_ClearITPendingBit(EXTI_Line13);
+		EXTI_ClearITPendingBit(EXTI_Line8);
 		
 	}
-	
 }
 
 

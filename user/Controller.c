@@ -46,7 +46,7 @@ void Controller_hardware_init(void) {
 	
 	Systick_Configuration();
 	LED_Configuration();
-	//button_Configuration();
+	button_Configuration();
 	usart1_Configuration(9600);
 	//SPI_Configuration();
   TIM4_PWM_Init();
@@ -466,8 +466,10 @@ void systick() {
 }
 
 void button1_interrupt() {
+	LED2_ON;
 }
 
 
 void button2_interrupt() {
+	LED2_OFF;
 }
