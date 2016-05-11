@@ -52,7 +52,7 @@ void maze_floodfill(){
 				
 				if (READ_B(maze_array_global[row][column], VISITED)){
 					
-						min_neighbor = 255;
+						min_neighbor = MAZE_SIZE * MAZE_SIZE-1;
 
 						if (!READ_B(maze_array_global[row][column], EAST))
 								if (min_neighbor > maze_dist_array_global[row][column+1])
@@ -379,8 +379,8 @@ void Runner_explore(int speed ){
 	
 	//delay_ms(1000);
 	
-	
-	store_path();
+	maze_floodfill();	
+	//store_path();
 	
 } // End method
 	

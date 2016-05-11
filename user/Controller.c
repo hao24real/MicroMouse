@@ -9,10 +9,22 @@
 #define KI 0
 #define KD 0
 
-#define LEFT_WALL_DISTANCE 1035
-#define RIGHT_WALL_DISTANCE 1063
-#define FRONT_RIGHT_WALL_DISTANCE 3251
-#define FRONT_LEFT_WALL_DISTANCE 2759
+int LEFT_WALL_DISTANCE = 1035;
+int RIGHT_WALL_DISTANCE = 1063;
+int FRONT_RIGHT_WALL_DISTANCE = 3251;
+int FRONT_LEFT_WALL_DISTANCE = 2759;
+
+#define MAZE_ADRESS 0x08040000
+
+#define LEFT_WALL_DISTANCE_ADRESS 0x08040100
+#define RIGHT_WALL_DISTANCE_ADRESS 0x08040101
+#define FRONT_LEFT_WALL_DISTANCE_ADRESS 0x08040102
+#define FRONT_RIGHT_WALL_DISTANCE_ADRESS 0x08040103
+
+#define LEFT_WALL_THRESHOLD_ADRESS 0x08040104
+#define RIGHT_WALL_THRESHOLD_ADRESS 0x08040105
+#define FRONT_LEFT_WALL_THRESHOLD_ADRESS 0x08040106
+#define FRONT_RIGHT_THRESHOLD_ADRESS 0x08040107
 
 
 #define VALID_ERR 15
@@ -96,7 +108,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 			readSensor();;
 				// CASE 1: correct position base on both wall
 				// For reliable sensor to correct position. we need to read the cloe value only
-			if ((DLSensor > (DL_THRESHOLD+750))&&(DRSensor > (DR_THRESHOLD+750))){
+			if ((DLSensor > (LEFT_WALL_DISTANCE-50))&&(DRSensor > (RIGHT_WALL_DISTANCE-50))){
 				if (temp_cnt >200){				
 					ERR = (DLSensor - DRSensor - (LEFT_WALL_DISTANCE - RIGHT_WALL_DISTANCE))/25;
 					// Check if error is valid for correction ( too far from wall)
@@ -111,7 +123,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				
 				
 				// CASE 2: have left wall
-			} else	if (DLSensor > (DL_THRESHOLD+750)){
+			} else	if (DLSensor > (LEFT_WALL_DISTANCE-50)){
 				if (temp_cnt >200){				
 					ERR = (DLSensor - LEFT_WALL_DISTANCE)/25;
 					// Check if error is valid for correction ( too far from wall)
@@ -131,7 +143,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				
 				
 				// Case 3: Use right wall for correction
-			} else if (DRSensor > (DR_THRESHOLD+750)){
+			} else if (DRSensor > (RIGHT_WALL_DISTANCE-50)){
 				if (temp_cnt >200){				
 					ERR = (DRSensor - RIGHT_WALL_DISTANCE)/25;
 					// Check if error is valid for correction ( too far from wall)
@@ -192,58 +204,48 @@ void Controller_maze_calibrate(){
 
 	// THESE VARIABLES SHOULD BE IN GLOBAL>>
 	// PUT HERE FOR TESTIG>>
-		int RD[500];
-	int LD[500];
-	
-	int FL[500];
-	int FR[500];
-
-	
-	
-	
 	int count, num;
 	int sum;
 	
 	
 	delay_ms(2000);
 	
+	ALL_LED_OFF;
 	LED1_ON;
+	LED3_ON;
 	
-		setLeftSpeed(30);
-		setRightSpeed(30);
+	setLeftSpeed(30);
+	setRightSpeed(30);
 	
-	for (count = 0; count < 500; count ++){
+	for (count = 0; count < 256; count ++){
 	
 		readSensor();
 		
-		LD[count] = DLSensor;
-		RD[count] = DRSensor;
+		general_purpose_array_1[count] = DLSensor;
+		general_purpose_array_2[count] = DRSensor;
 		
-		delay_ms(10);	
+		delay_ms(15);	
 	}
 	
 	setLeftSpeed(0);
 	setRightSpeed(0);
 	delay_ms(5000);
-	
-	LED1_OFF;
-	LED2_ON;
+
 	// Calculate Left D sensor
 	// Calculate sum
 	sum = 0;
-	for (count = 0; count < 500; count ++){
-		sum+= LD[count];
+	for (count = 0; count < GENERAL_ARRAY_SIZE; count ++){
+		sum+= general_purpose_array_1[count];
 	}
 	// Remove high error values	
-	LSS = sum/500;
-	num = 500;
-	for (count = 0; count < 500; count ++){
-		if (abs(LD[count] - LSS) > 150){
-			sum-=LD[count];
+	LSS = sum/GENERAL_ARRAY_SIZE;
+	num = GENERAL_ARRAY_SIZE;
+	for (count = 0; count < GENERAL_ARRAY_SIZE; count ++){
+		if (abs(general_purpose_array_1[count] - LSS) > 150){
+			sum-=general_purpose_array_1[count];
 			num--;
 		}
 	}
-	// Recalculate average
 	LSS = sum/num;
 	
 	
@@ -252,39 +254,38 @@ void Controller_maze_calibrate(){
 	// Calculate Right D sensor
 	// Calculate sum
 	sum = 0;
-	for (count = 0; count < 500; count ++){
-		sum+= RD[count];
+	for (count = 0; count < GENERAL_ARRAY_SIZE; count ++){
+		sum+= general_purpose_array_2[count];
 	}
 	// Remove high error values	
-	RSS = sum/500;
-	num = 500;
-	for (count = 0; count < 500; count ++){
-		if (abs(RD[count] - RSS) > 100){
-			sum-=RD[count];
+	RSS = sum/GENERAL_ARRAY_SIZE;
+	num = GENERAL_ARRAY_SIZE;
+	for (count = 0; count < GENERAL_ARRAY_SIZE; count ++){
+		if (abs(general_purpose_array_2[count] - RSS) > 150){
+			sum-=general_purpose_array_2[count];
 			num--;
 		}
 	}
-	// Recalculate average
 	RSS = sum/num;
 	
 	
+	LED1_OFF;	
+	LED3_OFF;
+	delay_ms(10000);
 	
-	
-	LED2_OFF;	
-	LED3_ON;
-
-	delay_ms(5000);
-	
+	LED2_ON;	
+	LED4_ON;
+	delay_ms(5000);	
 	
 	// Get front data
-	for (count = 0; count < 500; count ++){
+	for (count = 0; count < GENERAL_ARRAY_SIZE; count ++){
 	
 		readSensor();
 
-		FR[count] = FRSensor;
-		FL[count] = FLSensor;
+		general_purpose_array_1[count] = FLSensor;
+		general_purpose_array_2[count] = FRSensor;
 		
-		delay_ms(4);	
+		delay_ms(10);	
 	}
 	
 	
@@ -292,21 +293,39 @@ void Controller_maze_calibrate(){
 		
 	setLeftSpeed(0);
 	setRightSpeed(0);
-	delay_ms(10000);
+	delay_ms(2000);
 	
-	
-	// Calculate Left D sensor
+	// Calculate left F sensor
 	// Calculate sum
 	sum = 0;
-	for (count = 0; count < 500; count ++){
-		sum+= FR[count];
+	for (count = 0; count < GENERAL_ARRAY_SIZE; count ++){
+		sum+= general_purpose_array_1[count];
 	}
 	// Remove high error values	
-	FRSS = sum/500;
-	num = 500;
-	for (count = 0; count < 500; count ++){
-		if (abs(FR[count] - FRSS) > 100){
-			sum-=FR[count];
+	FLSS = sum/GENERAL_ARRAY_SIZE;
+	num = GENERAL_ARRAY_SIZE;
+	for (count = 0; count < GENERAL_ARRAY_SIZE; count ++){
+		if (abs(general_purpose_array_1[count] - FLSS) > 150){
+			sum-=general_purpose_array_1[count];
+			num--;
+		}
+	}
+	FLSS = sum/num;
+	
+	
+	
+	// Calculate right F sensor
+	// Calculate sum
+	sum = 0;
+	for (count = 0; count < GENERAL_ARRAY_SIZE; count ++){
+		sum+= general_purpose_array_2[count];
+	}
+	// Remove high error values	
+	FRSS = sum/GENERAL_ARRAY_SIZE;
+	num = GENERAL_ARRAY_SIZE;
+	for (count = 0; count < GENERAL_ARRAY_SIZE; count ++){
+		if (abs(general_purpose_array_2[count] - FRSS) > 150){
+			sum-=general_purpose_array_2[count];
 			num--;
 		}
 	}
@@ -316,27 +335,12 @@ void Controller_maze_calibrate(){
 	
 	
 	
-	// Calculate Right D sensor
-	// Calculate sum
-	sum = 0;
-	for (count = 0; count < 500; count ++){
-		sum+= FL[count];
-	}
-	// Remove high error values	
-	FLSS = sum/500;
-	num = 500;
-	for (count = 0; count < 500; count ++){
-		if (abs(FL[count] - FLSS) > 100){
-			sum-=FL[count];
-			num--;
-		}
-	}
-	// Recalculate average
-	FLSS = sum/num;
-	
+	LED2_OFF;
+	LED4_OFF;
 	delay_ms(5000);
 	
-	LED3_OFF;
+	// Done 
+	// TODO: Write to Flash
 	
 }
 
@@ -395,6 +399,62 @@ void Controller_frontwall_corecttion(){
 		setRightSpeed(0);
 			
 }
+
+
+void Controller_writeFlash(void){
+  int i, j;
+
+  setLeftSpeed(0);
+  setRightSpeed(0);
+  FLASH_Unlock();
+	
+
+  FLASH_ClearFlag( FLASH_FLAG_EOP|FLASH_FLAG_WRPERR|FLASH_FLAG_PGAERR|FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
+/**
+  * @brief  Erases a specified FLASH Sector.
+  *   
+  * @param  FLASH_Sector: The Sector number to be erased.
+  *          This parameter can be a value between FLASH_Sector_0 and FLASH_Sector_11
+  *    
+  * @param  VoltageRange: The device voltage range which defines the erase parallelism.  
+  *          This parameter can be one of the following values:
+  *            @arg VoltageRange_1: when the device voltage range is 1.8V to 2.1V, 
+  *                                  the operation will be done by byte (8-bit) 
+  *            @arg VoltageRange_2: when the device voltage range is 2.1V to 2.7V,
+  *                                  the operation will be done by half word (16-bit)
+  *            @arg VoltageRange_3: when the device voltage range is 2.7V to 3.6V,
+  *                                  the operation will be done by word (32-bit)
+  *            @arg VoltageRange_4: when the device voltage range is 2.7V to 3.6V + External Vpp, 
+  *                                  the operation will be done by double word (64-bit)
+  *       
+  * @retval FLASH Status: The returned value can be: FLASH_BUSY, FLASH_ERROR_PROGRAM,
+  *                       FLASH_ERROR_WRP, FLASH_ERROR_OPERATION or FLASH_COMPLETE.
+  */
+  FLASH_EraseSector(FLASH_Sector_11, VoltageRange_3);
+
+  for(i=0; i<MAZE_SIZE; i++)
+    for(j=0; j<MAZE_SIZE; j++)
+      FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
+			
+			
+	FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
+  FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
+  FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
+  FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
+
+  FLASH_Lock();
+}
+
+
+void Controller_readFlash(void){
+  u32 i, j;
+  for(i=0; i<MAZE_SIZE; i++)
+    for(j=0; j<MAZE_SIZE; j++)
+      maze_array_global[i][j] = *(int16_t *)(MAZE_ADRESS + (i*MAZE_SIZE+j)*4);
+}
+
+
+
 
 
 void systick() {
