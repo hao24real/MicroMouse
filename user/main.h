@@ -41,7 +41,9 @@
 
 #define START_DIRECTION 0
 
-#define MAZE_SIZE 6
+#define MAZE_SIZE 3
+
+#define GENERAL_ARRAY_SIZE 256 
 
 
 typedef unsigned char byte;
@@ -59,8 +61,8 @@ extern byte row_Dest, column_Dest;
 
 //path in there
 extern byte path_1_global[MAZE_SIZE*MAZE_SIZE];
-extern byte path_2_global[MAZE_SIZE*MAZE_SIZE];
-extern byte path_3_global[MAZE_SIZE*MAZE_SIZE];
+extern byte general_purpose_array_1[GENERAL_ARRAY_SIZE];
+extern byte general_purpose_array_2[GENERAL_ARRAY_SIZE];
 extern byte maze_dist_array_global[MAZE_SIZE][MAZE_SIZE];
 extern byte path_run_global[MAZE_SIZE*MAZE_SIZE];
 #endif

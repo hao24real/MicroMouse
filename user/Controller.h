@@ -2,6 +2,7 @@
 #define CONTROLLER_H 
 
 #include "stm32f4xx.h"
+#include "stm32f4xx_flash.h"
 #include "delay.h"
 #include "led.h"
 #include "button.h"

@@ -53,6 +53,7 @@ void maze_floodfill(){
 					
 						min_neighbor = MAZE_SIZE * MAZE_SIZE - 1;
 
+
 						if (!READ_B(maze_array_global[row][column], EAST))
 								if (min_neighbor > maze_dist_array_global[row][column+1])
 									min_neighbor = maze_dist_array_global[row][column+1];
@@ -209,7 +210,7 @@ void Runner_explore(int speed ){
 		for (i=0;i<MAZE_SIZE; i++)
 			for (j=0; j<MAZE_SIZE; j++){
 				path_1_global[i*MAZE_SIZE +j]= maze_array_global[i][j];
-				path_2_global[i*MAZE_SIZE +j] = maze_dist_array_global[i][j];
+				general_purpose_array_1[i*MAZE_SIZE +j] = maze_dist_array_global[i][j];
 		}
 		
 		Driver_go_straight(0, 0);
@@ -227,7 +228,7 @@ void Runner_explore(int speed ){
 		for (i=0;i<MAZE_SIZE; i++)
 			for (j=0; j<MAZE_SIZE; j++){
 				path_1_global[i*MAZE_SIZE +j]= maze_array_global[i][j];
-				path_2_global[i*MAZE_SIZE +j] = maze_dist_array_global[i][j];
+				general_purpose_array_1[i*MAZE_SIZE +j] = maze_dist_array_global[i][j];
 		}
 		
 		Driver_go_straight(0, 0);
@@ -415,6 +416,7 @@ void Runner_explore(int speed ){
 	//maze_dist_array_global[row_Dest][column_Dest] = 0;
 	//maze_floodfill();
 	store_path();
+
 	
 } // End method
 	
