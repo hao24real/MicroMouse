@@ -45,16 +45,21 @@ int main(void) {
 
 	Runner_explore(60);
 
-	delay_ms(1000);
-	
 
-<<<<<<< HEAD
+	while(1){
+		delay_ms(10000);
+		Runner_run(80);
+	
+		delay_ms(10000);
+		Runner_run(70);
+		
+			delay_ms(10000);
+	Runner_run_onpost(80);
+	
 	delay_ms(10000);
-	Runner_run(90);
+	Runner_run_onpost(70);
 	
-
-	
-	while(1) {
-
 	}
+
+
 }

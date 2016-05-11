@@ -12,8 +12,8 @@
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
  
-	#define LEFT_MOTOR_VALUE 88
-	#define RIGHT_MOTOR_VALUE 88
+	#define TURN_LEFT_ANGLE 88
+	#define TURN_RIGHT_ANGLE 88
 
 	// Declaration off variables
 	byte walls_ESWN;
@@ -337,7 +337,13 @@ void Runner_explore(int speed ){
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();
-				Driver_turn_right(0,RIGHT_MOTOR_VALUE, speed);
+				else{
+					Driver_go_straight(0,0);
+				}
+				delay_ms(100);
+				Driver_turn_right(0,TURN_RIGHT_ANGLE, speed);
+				Driver_go_straight(0,0);
+				delay_ms(50);
 				Driver_go_straight(90, speed);
 
 					
@@ -351,10 +357,16 @@ void Runner_explore(int speed ){
 					// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 					if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();
-
-					Driver_turn_left(0, LEFT_MOTOR_VALUE, speed);
-
+					else{
+						Driver_go_straight(0,0);
+					}
+					delay_ms(100);
+					
+					Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
+					Driver_go_straight(0,0);
+					delay_ms(50);
 					Driver_go_straight(90, speed);
+					
 				
 				
 				current_direction_global = next_position;
@@ -367,11 +379,11 @@ void Runner_explore(int speed ){
 				if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();	
 
-				Driver_turn_left(0,LEFT_MOTOR_VALUE, speed);
+				Driver_turn_left(0,TURN_LEFT_ANGLE, speed);
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();		
-				Driver_turn_left(0,LEFT_MOTOR_VALUE, speed);
+				Driver_turn_left(0,TURN_LEFT_ANGLE, speed);
 
 				if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();			
@@ -448,10 +460,26 @@ void Runner_run(int speed){
 		byte path_count;
 	
 	  //path index is the size of the path_run_array
-		for(path_count = 0; path_count < path_index; path_count ++){
+		
+		for(path_count = 1; path_count < path_index; path_count ++){
 			switch(path_run_global[path_count]){
 				case FRONT:
-					Driver_go_straight(180, speed);
+					if(path_run_global[path_count+1] == RIGHT){
+						Driver_go_straight(90,speed);
+						Driver_turn_right(90, 90, speed);
+						Driver_go_straight(90,speed);
+						//Driver_turn_right_onpost(90, speed);
+						path_count ++;
+					}
+					else if(path_run_global[path_count+1] == LEFT){
+						Driver_go_straight(90,speed);
+						Driver_turn_left(90, 90, speed);
+						Driver_go_straight(90,speed);
+						//Driver_turn_left_onpost(90, speed);
+						path_count++;
+					}
+					else
+						Driver_go_straight(180, speed);
 					break;
 				case RIGHT:
 					Driver_turn_right(0, 90, speed);
@@ -463,10 +491,41 @@ void Runner_run(int speed){
 					break;
 			}
 		}
-		
 		Driver_go_straight(0, 0);
-		
 }
 
 
+void Runner_run_onpost(int speed){
+
+		byte path_count;
+	
+	  //path index is the size of the path_run_array
+		for(path_count = 0; path_count < path_index; path_count ++){
+			switch(path_run_global[path_count]){
+				case FRONT:
+					if(path_run_global[path_count+1] == RIGHT){
+						Driver_turn_right_onpost(90, speed);
+						Driver_go_straight(90,speed);
+						path_count ++;
+					}
+					else if(path_run_global[path_count+1] == LEFT){
+						Driver_turn_left_onpost(90, speed);
+						Driver_go_straight(90,speed);
+						path_count++;
+					}
+					else
+						Driver_go_straight(180, speed);
+					break;
+				case RIGHT:
+					Driver_turn_right(0, 90, speed);
+					Driver_go_straight(180, speed);
+					break;
+				case LEFT:
+					Driver_turn_left(0, 90, speed);
+					Driver_go_straight(180, speed);
+					break;
+			}
+		}
+		Driver_go_straight(0, 0);
+}
 
