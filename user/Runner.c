@@ -332,7 +332,7 @@ void Runner_explore(int speed ){
 					// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 					if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();
-					Driver_turn_left(0,85, speed);
+					Driver_turn_left(0,90, speed);
 					Driver_go_straight(90, speed);
 				
 				
@@ -345,11 +345,11 @@ void Runner_explore(int speed ){
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();	
-				Driver_turn_left(0,85, speed);
+				Driver_turn_left(0,90, speed);
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();		
-				Driver_turn_left(0,85, speed);
+				Driver_turn_left(0,90, speed);
 				if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();			
 				Driver_go_straight(90, speed);

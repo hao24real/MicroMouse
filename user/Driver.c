@@ -2,6 +2,7 @@
 #include "delay.h"
 
 #define COUNT_ERR 
+#define ACCELERATION 4
 
 void Driver_turn_left(int distance, int angle, int speed){
 	// Declaration of local variables
@@ -127,7 +128,25 @@ void Driver_turn_left_onpost(int angle, int speed){
 
 /* return whether successful or not */
 void Driver_go_straight(int distance, int speed) {
-	Controller_run(distance*LW_MM2COUNT_RATIO, distance*RW_MM2COUNT_RATIO, speed, speed);
+	int travel_dist = distance; //10counts/s/s	
+	int curr_speed = (leftspeed_global + rightspeed_global)/2;
+	
+	if (curr_speed < speed){
+		while ((travel_dist > 1)&&(curr_speed < speed)){
+			travel_dist-=1;
+			curr_speed += ACCELERATION; ;
+			Controller_run(1*LW_MM2COUNT_RATIO, 1*RW_MM2COUNT_RATIO, curr_speed, curr_speed);
+		}
+		Controller_run(travel_dist*LW_MM2COUNT_RATIO, travel_dist*RW_MM2COUNT_RATIO, curr_speed, curr_speed);
+
+	} else {
+		while ((travel_dist > 2)&&(curr_speed > speed)){
+		  travel_dist-= 2;
+		  curr_speed -= 1; ;
+		  Controller_run(2*LW_MM2COUNT_RATIO, 2*RW_MM2COUNT_RATIO, curr_speed, curr_speed);
+		}
+		Controller_run(travel_dist*LW_MM2COUNT_RATIO, travel_dist*RW_MM2COUNT_RATIO, speed, speed);
+	}
 }
 
 

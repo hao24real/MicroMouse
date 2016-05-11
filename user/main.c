@@ -43,16 +43,16 @@ int main(void) {
 	}
 	
 
-	Runner_explore(40);
+	Runner_explore(35);
 	delay_ms(1000);
 	
-//	delay_ms(1000);
-
-
-	delay_ms(10000);
-	Runner_run(80);
+	delay_ms(1000);
 	
-	delay_ms(10000);
+
+//	delay_ms(10000);
+//	Runner_run(80);
+	
+//	delay_ms(10000);
 		
 
 
