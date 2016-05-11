@@ -23,10 +23,7 @@ int main(void) {
 	
 	current_direction_global = START_DIRECTION;
 	
-	
-	
 	LED4_ON;
-	
 	
 	for(i = 0; i < MAZE_SIZE; i++){
 		for(j = 0; j < MAZE_SIZE; j++){
@@ -41,6 +38,7 @@ int main(void) {
 		SET_B(maze_array_global[i][MAZE_SIZE-1], EAST);
 		SET_B(maze_array_global[MAZE_SIZE-1][i], SOUTH);
 	}
+	SET_B(maze_array_global[0][0], SOUTH);
 	
 
 	Runner_explore(60);

@@ -12,7 +12,7 @@
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
  
-	#define TURN_LEFT_ANGLE 88
+	#define TURN_LEFT_ANGLE 90
 	#define TURN_RIGHT_ANGLE 88
 
 	// Declaration off variables
@@ -31,7 +31,6 @@
 
 void maze_initialize(byte row_Dest, byte column_Dest){
 	byte row, column;
-	
 	for (row = 0; row< MAZE_SIZE; row++){
 		for (column = 0; column < MAZE_SIZE; column++){
 				maze_dist_array_global[row][column] = abs(row - row_Dest) + abs(column - column_Dest);
@@ -39,20 +38,39 @@ void maze_initialize(byte row_Dest, byte column_Dest){
 	}
 }
 
-// void BFS_floodfill(){
+void BFS_floodfill(){
 
-// 	byte end_index;
-// 	byte start_index;
+	//columns are for indicating the position of cell
+	byte stack_cell1[MAZE_SIZE * MAZE_SIZE][2];
+	byte stack_cell2[MAZE_SIZE * MAZE_SIZE][2];
 
-// 	//only terminate when simulation of MM reach 
-// 	while((current_position_global[ROW_INDEX] != 0)
-// 		&& (current_position_global[COLUMN_INDEX] = column_Dest != 0)){
+	byte index_stack1 = 0;
+	byte index_stack2 = 0;
 
-// 	}
+	byte count_stack1 = 0;
+	byte count_stack2 = 0;
 
-// }
+	bool reach_origin = 0;
+
+	//only terminate when simulation of MM reach 
+	while(!reach_origin){
+
+		while(count_stack1 != 0 && !reach_origin){
+			
+
+		}
+		while(count_stack2 != 0 && !reach_origin){
+
+		}
+
+	}
+
+// 	#define CLR_B(p,n) ((p) &= ~((1) << (n)))
+// 	SET_B(maze_array_global, FLOODED);
+// 	#define READ_B(p,n) ((p) & ((1) << (n)))
 
 
+}
 
 
 void maze_floodfill(){
@@ -122,12 +140,15 @@ void store_path(){
 	CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
 	maze_dist_array_global[row_Dest][column_Dest] = 0;
 	
+	maze_initialize(row_Dest, column_Dest);
 	maze_floodfill();	
+
+	SET_B(maze_array_global[0][0], VISITED);
+	//maze_floodfill_visited();
 	
 	debug_dist();
 	
 	SET_B(maze_array_global[row_Dest][column_Dest] ,VISITED);
-	
 	
 	//use counter to keep track so we can use the path_1_global as a stack
 	path_index = 0;
@@ -139,11 +160,10 @@ void store_path(){
 	//initialization from origin again
 	current_position_global[ROW_INDEX] = 0;
 	current_position_global[COLUMN_INDEX] = 0;
-
+	
 
 	while((current_position_global[ROW_INDEX] != row_Dest)||(current_position_global[COLUMN_INDEX] != column_Dest )) {
-
-	
+		
 		current_dist = maze_dist_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]];	
 		
 		// Check EAST neighbor
@@ -419,13 +439,15 @@ void Runner_explore(int speed ){
 			
 			row_Dest = 0; 
 			column_Dest = 0;
+		
 			if((current_position_global[ROW_INDEX] == row_Dest) && (current_position_global[COLUMN_INDEX] == column_Dest)){
 				 stop = 1;
 			}
-			//maze_initialize(row_Dest,column_Dest);
+			maze_initialize(row_Dest,column_Dest);
 			CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
 	}
-	
+	//set start point and finish point as visited
+	SET_B()
 	/*
 	 ===========================================================
 		for (i=0;i<MAZE_SIZE; i++)
@@ -442,8 +464,13 @@ void Runner_explore(int speed ){
 	//Driver_go_straight(0,0);
 	//delay_ms(1000);
 	
+	
 	Driver_go_straight(90,speed);
+	Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
+	Driver_frontwall_correction();
+	Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
 	Driver_go_straight(0,0);
+	
 	
 	//delay_ms(1000);
 	
@@ -451,6 +478,7 @@ void Runner_explore(int speed ){
 	//maze_dist_array_global[row_Dest][column_Dest] = 0;
 	//maze_floodfill();
 	store_path();
+	
 
 	
 } // End method

@@ -34,6 +34,7 @@
 #define LEFT 3
 
 #define VISITED 4
+#define FLOODED 5
 
 #define ROW_INDEX 0
 #define COLUMN_INDEX 1
@@ -41,7 +42,7 @@
 
 #define START_DIRECTION 0
 
-#define MAZE_SIZE 6
+#define MAZE_SIZE 4
 
 #define GENERAL_ARRAY_SIZE 256 
 
