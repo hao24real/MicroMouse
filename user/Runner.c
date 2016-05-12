@@ -45,57 +45,213 @@ void BFS_floodfill(){
 	byte stack_cell2[MAZE_SIZE * MAZE_SIZE][2]; 
 	//2 byte for row,column in each index of stack, no real stack so use array
 		
-		
-	byte index_stack1 = 0;
-	byte index_stack2 = 0;
-
-	byte count_stack1 = 0;
+	byte current_cell_dist;
+	
+  byte count_stack1 = 0;
 	byte count_stack2 = 0;
-
+	byte current_cell_row = 0;
+	byte current_cell_column = 0;
+	
+	byte current_cell = 0;
 	bool reach_origin = 0;
 
+	//originally destination cell is in there 
+	count_stack1 = 0;
+	
+	//this value should be 0 from the start
+	current_cell_dist = maze_dist_array_global[row_Dest][column_Dest];;
+	
 	//push the first destination to the stack
-	stack_cell1[index_stack1][ROW_INDEX] = row_Dest;
-	stack_cell1[index_stack1][COLUMN_INDEX] = column_Dest;
-	SET_B(maze_array_global[stack_cell1[index_stack1][ROW_INDEX]][stack_cell1[index_stack1][COLUMN_INDEX]], FLOODED);
-	count_stack1++;
+	stack_cell1[count_stack1][ROW_INDEX] = row_Dest;
+	stack_cell1[count_stack1][COLUMN_INDEX] = column_Dest;
+	SET_B(maze_array_global[stack_cell1[count_stack1][ROW_INDEX]][stack_cell1[count_stack1][COLUMN_INDEX]], FLOODED);
+	
+	count_stack1 ++;
+
 	
 	//only terminate when simulation of MM reach 
 	while(!reach_origin){
 
-		maze_dist_array_global[stack_cell1[index_stack1][ROW_INDEX]][stack_cell1[index_stack1][COLUMN_INDEX]] ;
+		current_cell_dist++;
+		
 		while(count_stack1 != 0 && !reach_origin){
-			//check north wall
-			//then check visited and flooded
-			if(!READ_B(maze_array_global[stack_cell1[index_stack1][ROW_INDEX]][stack_cell1[index_stack1][COLUMN_INDEX]], NORTH)){
-				if(!READ_B(maze_array_global[stack_cell1[index_stack1][ROW_INDEX]-1][stack_cell1[index_stack1][COLUMN_INDEX]], FLOODED)
-					&& !READ_B(maze_array_global[stack_cell1[index_stack1][ROW_INDEX]-1][stack_cell1[index_stack1][COLUMN_INDEX]], VISITED)) {
+			
+			//assigng to cell's position base from the stack
+			current_cell_row = stack_cell1[count_stack1 - 1][ROW_INDEX];
+			current_cell_column = stack_cell1[count_stack1 - 1][COLUMN_INDEX];
+			current_cell = maze_array_global[current_cell_row][current_cell_column];
 
+
+			//check north wall
+			//then check visited and not flooded
+			if(!READ_B(current_cell, NORTH)){
+				if(!READ_B(maze_array_global[current_cell_row - 1][current_cell_column], FLOODED)
+					&& READ_B(maze_array_global[current_cell_row - 1][current_cell_column], VISITED)) {
+
+					//push to stack 2
+					stack_cell2[count_stack2][ROW_INDEX] = current_cell_row - 1;
+					stack_cell2[count_stack2][COLUMN_INDEX] = current_cell_column;
+					count_stack2++;
+
+					//set it to be incremented number
+					maze_dist_array_global[current_cell_row - 1][current_cell_column] = current_cell_dist;
+					SET_B(maze_array_global[current_cell_row-1][current_cell_column], FLOODED);
+
+
+					if((current_cell_row - 1 == 0)&& (current_cell_column == 0))
+						reach_origin = 1;
 				}
 			}
 			
-			
-			if(
+			if(!READ_B(current_cell, EAST)){
+				if(!READ_B(maze_array_global[current_cell_row][current_cell_column+1], FLOODED)
+					&& READ_B(maze_array_global[current_cell_row][current_cell_column+1], VISITED)) {
+
+					//push to stack 2
+					stack_cell2[count_stack2][ROW_INDEX] = current_cell_row;
+					stack_cell2[count_stack2][COLUMN_INDEX] = current_cell_column + 1;
+					count_stack2++;
+
+					//set it to be incremented number
+					maze_dist_array_global[current_cell_row][current_cell_column +1] = current_cell_dist;
+					SET_B(maze_array_global[current_cell_row ][current_cell_column + 1], FLOODED);
+
+
+					if((current_cell_row == 0)&& (current_cell_column+1 == 0))
+						reach_origin = 1;
+				}
+			}
 				
-			if
+			if(!READ_B(current_cell, SOUTH)){
+				if(!READ_B(maze_array_global[current_cell_row+1][current_cell_column], FLOODED)
+					&& READ_B(maze_array_global[current_cell_row+1][current_cell_column], VISITED)) {
+
+					//push to stack 2
+					stack_cell2[count_stack2][ROW_INDEX] = current_cell_row + 1;
+					stack_cell2[count_stack2][COLUMN_INDEX] = current_cell_column;
+					count_stack2++;
+
+					//set it to be incremented number
+					maze_dist_array_global[current_cell_row+ 1][current_cell_column] = current_cell_dist;
+					SET_B(maze_array_global[current_cell_row + 1][current_cell_column], FLOODED);
+	
+					if((current_cell_row+1 == 0)&& (current_cell_column == 0))
+						reach_origin = 1;
+				}
+			}
 				
-			if
-			
-			
+			if(!READ_B(current_cell, WEST)){
+				if(!READ_B(maze_array_global[current_cell_row][current_cell_column-1], FLOODED)
+					&& READ_B(maze_array_global[current_cell_row][current_cell_column-1], VISITED)) {
+
+					//push to stack 2
+					stack_cell2[count_stack2][ROW_INDEX] = current_cell_row;
+					stack_cell2[count_stack2][COLUMN_INDEX] = current_cell_column - 1;
+					count_stack2++;
+
+					//set it to be incremented number
+					maze_dist_array_global[current_cell_row][current_cell_column - 1] = current_cell_dist;
+					SET_B(maze_array_global[current_cell_row ][current_cell_column - 1], FLOODED);
+
+					if((current_cell_row == 0)&& (current_cell_column - 1 == 0))
+						reach_origin = 1;
+				}
+			}
+
+			//pop from stack 1
+			count_stack1 --;
 		}
+
+		current_cell_dist++;
+
 		while(count_stack2 != 0 && !reach_origin){
 
+			//assigng to cell's position base from the stack
+			current_cell_row = stack_cell2[count_stack2 - 1][ROW_INDEX];
+			current_cell_column = stack_cell2[count_stack2 - 1][COLUMN_INDEX];
+			current_cell = maze_array_global[current_cell_row][current_cell_column];
 
 
+			//check north wall
+			//then check visited and not flooded
+			if(!READ_B(current_cell, NORTH)){
+				if(!READ_B(maze_array_global[current_cell_row - 1][current_cell_column], FLOODED)
+					&& READ_B(maze_array_global[current_cell_row - 1][current_cell_column], VISITED)) {
+
+					//push to stack 1
+					stack_cell1[count_stack1][ROW_INDEX] = current_cell_row - 1;
+					stack_cell1[count_stack1][COLUMN_INDEX] = current_cell_column;
+					count_stack1++;
+
+					//set it to be incremented number
+					maze_dist_array_global[current_cell_row - 1][current_cell_column] = current_cell_dist;
+					SET_B(maze_array_global[current_cell_row-1][current_cell_column], FLOODED);
+
+
+					if((current_cell_row - 1 == 0)&& (current_cell_column == 0))
+						reach_origin = 1;
+				}
+			}
+			
+			if(!READ_B(current_cell, EAST)){
+				if(!READ_B(maze_array_global[current_cell_row][current_cell_column+1], FLOODED)
+					&& READ_B(maze_array_global[current_cell_row][current_cell_column+1], VISITED)) {
+
+					//push to stack 1
+					stack_cell1[count_stack1][ROW_INDEX] = current_cell_row;
+					stack_cell1[count_stack1][COLUMN_INDEX] = current_cell_column + 1;
+					count_stack1++;
+
+					//set it to be incremented number
+					maze_dist_array_global[current_cell_row][current_cell_column +1] = current_cell_dist;
+					SET_B(maze_array_global[current_cell_row ][current_cell_column + 1], FLOODED);
+
+
+					if((current_cell_row == 0)&& (current_cell_column+1 == 0))
+						reach_origin = 1;
+				}
+			}
+				
+			if(!READ_B(current_cell, SOUTH)){
+				if(!READ_B(maze_array_global[current_cell_row+1][current_cell_column], FLOODED)
+					&& READ_B(maze_array_global[current_cell_row+1][current_cell_column], VISITED)) {
+
+					//push to stack 1
+					stack_cell1[count_stack1][ROW_INDEX] = current_cell_row + 1;
+					stack_cell1[count_stack1][COLUMN_INDEX] = current_cell_column;
+					count_stack1++;
+
+					//set it to be incremented number
+					maze_dist_array_global[current_cell_row + 1][current_cell_column] = current_cell_dist;
+					SET_B(maze_array_global[current_cell_row + 1][current_cell_column], FLOODED);
+	
+					if((current_cell_row+1 == 0)&& (current_cell_column == 0))
+						reach_origin = 1;
+				}
+			}
+				
+			if(!READ_B(current_cell, WEST)){
+				if(!READ_B(maze_array_global[current_cell_row][current_cell_column-1], FLOODED)
+					&& READ_B(maze_array_global[current_cell_row][current_cell_column-1], VISITED)) {
+
+					//push to stack 1
+					stack_cell1[count_stack1][ROW_INDEX] = current_cell_row;
+					stack_cell1[count_stack1][COLUMN_INDEX] = current_cell_column - 1;
+					count_stack1++;
+
+					//set it to be incremented number
+					maze_dist_array_global[current_cell_row][current_cell_column - 1] = current_cell_dist;
+					SET_B(maze_array_global[current_cell_row ][current_cell_column - 1], FLOODED);
+
+					if((current_cell_row == 0)&& (current_cell_column - 1 == 0))
+						reach_origin = 1;
+				}
+			}
+			//pop from stack 2
+			count_stack2 --;
 		}
-
+		current_cell_dist++;
 	}
-
-// 	#define CLR_B(p,n) ((p) &= ~((1) << (n)))
-// 	SET_B(maze_array_global, FLOODED);
-// 	#define READ_B(p,n) ((p) & ((1) << (n)))
-
-
 }
 
 
@@ -167,11 +323,9 @@ void store_path(){
 	
 	maze_initialize(row_Dest, column_Dest);
 	
-	maze_floodfill();	
+	BFS_floodfill();
 	
 	debug_dist();
-	
-	SET_B(maze_array_global[row_Dest][column_Dest] ,VISITED);
 	
 	//use counter to keep track so we can use the path_1_global as a stack
 	path_index = 0;
