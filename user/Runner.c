@@ -2,6 +2,7 @@
 #include "Driver.h"
 #include "main.h"
 #include "delay.h"
+#include "usart.h"
 #include <stdlib.h>
 
 
@@ -12,26 +13,30 @@
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
  
-	#define TURN_LEFT_ANGLE 88
-	#define TURN_RIGHT_ANGLE 88
+#define TURN_LEFT_ANGLE 90
+#define TURN_RIGHT_ANGLE 88
+#define FIRST_RUN 1
+#define SECOND_RUN 2
+#define THIRD_RUN 3
+#define RETURN_RUN 5
+#define GOOD_PATH (MAZE_SIZE*MAZE_SIZE - 5)
 
-	// Declaration off variables
-	byte walls_ESWN;
-	
-	byte walls_FLBR;
-	
-	
-	// Next interested position
-	byte next_position;
-	// neighbor value
-	byte next_dist, east_neighbor, south_neighbor, west_neighbor, north_neighbor;
-	
-	byte path_index;
+
+// Declaration off variables
+byte walls_ESWN;
+byte walls_FLBR;
+
+
+// Next interested position
+byte next_position;
+// neighbor value
+byte next_dist, east_neighbor, south_neighbor, west_neighbor, north_neighbor;
+
+byte path_index;
 	
 
 void maze_initialize(byte row_Dest, byte column_Dest){
 	byte row, column;
-	
 	for (row = 0; row< MAZE_SIZE; row++){
 		for (column = 0; column < MAZE_SIZE; column++){
 				maze_dist_array_global[row][column] = abs(row - row_Dest) + abs(column - column_Dest);
@@ -39,31 +44,50 @@ void maze_initialize(byte row_Dest, byte column_Dest){
 	}
 }
 
-// void BFS_floodfill(){
 
-// 	byte end_index;
-// 	byte start_index;
+/*
+void BFS_floodfill(){
 
-// 	//only terminate when simulation of MM reach 
-// 	while((current_position_global[ROW_INDEX] != 0)
-// 		&& (current_position_global[COLUMN_INDEX] = column_Dest != 0)){
+	//columns are for indicating the position of cell
+	byte stack_cell1[MAZE_SIZE * MAZE_SIZE][2];
+	byte stack_cell2[MAZE_SIZE * MAZE_SIZE][2];
 
-// 	}
+	byte index_stack1 = 0;
+	byte index_stack2 = 0;
 
-// }
+	byte count_stack1 = 0;
+	byte count_stack2 = 0;
+
+	bool reach_origin = 0;
+
+	//only terminate when simulation of MM reach 
+	while(!reach_origin){
+
+		while(count_stack1 != 0 && !reach_origin){
+			
+
+		}
+		while(count_stack2 != 0 && !reach_origin){
+
+		}
+
+	}
+
+// 	#define CLR_B(p,n) ((p) &= ~((1) << (n)))
+// 	SET_B(maze_array_global, FLOODED);
+// 	#define READ_B(p,n) ((p) & ((1) << (n)))
 
 
-
+}
+*/
 
 void maze_floodfill(){
-	
 	
 	byte row, column, counter;
 	byte min_neighbor;
 	
-
 	
-	// Change this..
+	// MAGIC 256 TIMES CHANGING..
 	for(counter = 0; counter < MAZE_SIZE*MAZE_SIZE;counter++)
 		for (row = 0; row< MAZE_SIZE; row++)
 			for (column = 0; column < MAZE_SIZE; column++){
@@ -89,8 +113,8 @@ void maze_floodfill(){
 							if (min_neighbor > maze_dist_array_global[row-1][column])
 								min_neighbor = maze_dist_array_global[row-1][column];
 							
-						maze_dist_array_global[row][column] = min_neighbor + 1;
-							
+						if (min_neighbor < MAZE_SIZE * MAZE_SIZE - 1)
+							maze_dist_array_global[row][column] = min_neighbor + 1;		
 				}
 	}
 	
@@ -108,27 +132,153 @@ void debug_dist(){
 	
 
 
-void store_path(){
-	
-	byte index, current_dist, next_position_local, east_neighbor_dist, west_neighbor_dist, south_neighbor_dist, north_neighbor_dist;
 
+/* 
+ * This Method find and store the shortest path from begining to center
+ * Return the number of cell need to inoder to go to center 
+ */
+byte store_path(){
+	
+	byte index, current_dist, next_position_local, current_position_local[2];
+	byte east_neighbor_dist, west_neighbor_dist, south_neighbor_dist, north_neighbor_dist;
 	byte current_direction_local = EAST;
 	
 	LED1_ON;
-	
-	row_Dest = MAZE_SIZE -1;
-	column_Dest = MAZE_SIZE -1;
-	
-	CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
-	maze_dist_array_global[row_Dest][column_Dest] = 0;
-	
+
+	// 1. Initialize the maze.
+	maze_initialize(MAZE_SIZE - 1, MAZE_SIZE -1);
+
+	// 2. Floodfill the whole maze
+	// a. Set ultimate destination VISITED bit 0 so that floodfill will not change this.
+	// b. Then set it to visited so that store path can reach
+	// POST REQUIREMENT: The ultimate destination (the center) is visited
+	// so we will not worry about storing the old value of this position
+	// It will be set to true anyway
+	CLR_B(maze_array_global[MAZE_SIZE - 1][MAZE_SIZE -1], VISITED);
 	maze_floodfill();	
+	SET_B(maze_array_global[MAZE_SIZE - 1][MAZE_SIZE -1], VISITED);
+
+	// 3. Find the shortest path to the ultimate destination
+	// a. use counter to keep track so we can use the path_1_global as a stack
+	path_index = 0;
 	
-	debug_dist();
+	// b. initialize the array for turning 
+	for(index = 0; index < MAZE_SIZE * MAZE_SIZE; index++)
+		path_run_global[index] = 0;
+
+	// c. Assume we start from origin
+	current_position_local[ROW_INDEX] = 0;
+	current_position_local[COLUMN_INDEX] = 0;
 	
-	SET_B(maze_array_global[row_Dest][column_Dest] ,VISITED);
+  // d. While loop until we find the center or we can not reach to the center
+	//    because of the ifinite loop causing by unvisited cell.
+	//    if path_index >= MAZE_SIZE*MAZE_SIZE - 1 -> that means there is another shorter way need to explore
+	while(((current_position_local[ROW_INDEX] != MAZE_SIZE -1)||
+				(current_position_local[COLUMN_INDEX] != MAZE_SIZE - 1 ))&&
+				(path_index < MAZE_SIZE*MAZE_SIZE - 2)){
+		
+		current_dist = maze_dist_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]];	
+		
+		// Check EAST neighbor
+		if (!READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]], EAST)){		
+			east_neighbor_dist = maze_dist_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]+1];
+			if ((current_dist == (east_neighbor_dist + 1) )
+				&& READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX] + 1] ,VISITED)) 
+			{
+				next_position_local = EAST;
+			}
+		}
+		
+		// Check NORTH neighbor
+		if (!READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]], NORTH)){
+			north_neighbor_dist = maze_dist_array_global[current_position_local[ROW_INDEX]-1][current_position_local[COLUMN_INDEX]];
+			if ((current_dist == (north_neighbor_dist + 1)) 
+				 && READ_B(maze_array_global[current_position_local[ROW_INDEX]-1][current_position_local[COLUMN_INDEX]] ,VISITED))
+			{
+				next_position_local = NORTH;
+			}
+		}
+		
+		// Check WEST neighbor
+		if (!READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]], WEST)){
+			west_neighbor_dist = maze_dist_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]-1];
+			if ((current_dist == (west_neighbor_dist + 1)) 
+				&& READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]-1] ,VISITED))
+			{
+				next_position_local = WEST;
+			}
+		}
+
+		// Check SOUTH neighbor
+		if (!READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]], SOUTH)){
+		  south_neighbor_dist = maze_dist_array_global[current_position_local[ROW_INDEX]+1][current_position_local[COLUMN_INDEX]];
+			if ((current_dist == (south_neighbor_dist + 1))
+				&& READ_B(maze_array_global[current_position_local[ROW_INDEX]+1][current_position_local[COLUMN_INDEX]] ,VISITED))
+			{
+				next_position_local = SOUTH;
+			}
+		}
+
+		if(next_position_local == current_direction_local)
+			path_run_global[path_index] = FRONT;
+		else if (next_position_local == RIGHT_DIRECT(current_direction_local))
+			path_run_global[path_index] = RIGHT;
+		else if (next_position_local == LEFT_DIRECT(current_direction_local))
+			path_run_global[path_index] = LEFT;
+		else if (next_position_local == BACK_DIRECT(current_direction_local))
+			path_run_global[path_index] = BACK;
+		
+		current_direction_local = next_position_local;
+		
+		// Update the corrent position global
+		if (current_direction_local == EAST)
+			current_position_local[COLUMN_INDEX]++;
+
+		else if (current_direction_local == SOUTH)
+			current_position_local[ROW_INDEX]++;
+
+		else if (current_direction_local == WEST)
+			current_position_local[COLUMN_INDEX]--;
+
+		else if (current_direction_local == NORTH)
+			current_position_local[ROW_INDEX]--;
+		
+		path_index ++;
+	}
+	// turn off indicator
+	LED1_OFF;
 	
+	// return number of cell
+	return path_index;
+}
+
+/* This is another method_ Disavange: change alot global variable. unoptimize
+void store_path(){
 	
+	byte index, index2, current_dist, next_position_local, current_position_local[2];
+	byte east_neighbor_dist, west_neighbor_dist, south_neighbor_dist, north_neighbor_dist;
+	byte current_direction_local = EAST;
+	
+	LED1_ON;
+
+	// 1. Initialize the maze.
+	// a. Assume all cells are 255 far from destination.
+	// b. Then set ultimate destination to 0
+	for (index = 0; index< MAZE_SIZE; index++){
+		for (index2 = 0; index2 < MAZE_SIZE; index2++){
+				maze_dist_array_global[index][index2] = MAZE_SIZE*MAZE_SIZE - 1;
+		}
+	}
+	maze_dist_array_global[MAZE_SIZE - 1][MAZE_SIZE - 1] = 0;
+
+	// 2. Floodfill the whole maze
+	// a. Set ultimate destination VISITED bit 0 so that floodfill will not change this.
+	// b. Then set it to visited so that store path can reach
+	CLR_B(maze_array_global[MAZE_SIZE - 1][MAZE_SIZE -1], VISITED);
+	maze_floodfill();	
+	SET_B(maze_array_global[MAZE_SIZE - 1][MAZE_SIZE -1], VISITED);
+
+	// 3. Find the shortest path to the ultimate destination
 	//use counter to keep track so we can use the path_1_global as a stack
 	path_index = 0;
 	
@@ -137,14 +287,14 @@ void store_path(){
 		path_run_global[index] = 0;
 
 	//initialization from origin again
-	current_position_global[ROW_INDEX] = 0;
-	current_position_global[COLUMN_INDEX] = 0;
-
-
-	while((current_position_global[ROW_INDEX] != row_Dest)||(current_position_global[COLUMN_INDEX] != column_Dest )) {
-
+	current_position_local[ROW_INDEX] = 0;
+	current_position_local[COLUMN_INDEX] = 0;
 	
-		current_dist = maze_dist_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]];	
+
+	while((current_position_local[ROW_INDEX] != MAZE_SIZE -1)||
+				(current_position_local[COLUMN_INDEX] != MAZE_SIZE - 1 )) {
+		
+		current_dist = maze_dist_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]];	
 		
 		// Check EAST neighbor
 		if (!READ_B(maze_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]], EAST)){		
@@ -217,52 +367,45 @@ void store_path(){
 	LED1_OFF;
 }
 
+*/
 
 
+/* 
+ * This is 1 of 2 main finction in Runner class
+ * This function navigate the mice to explore unexplored cell in the maze
+ * Recode all wall information, direction and position.
+ */
 void Runner_explore(int speed ){
+
+	byte STOP_FLAG = 0;
+	byte RUN = FIRST_RUN;
+	byte path_count;
+	byte row_Dest = MAZE_SIZE-1, column_Dest = MAZE_SIZE-1;
 	
 	
-	byte i,j;
+	// Stop and wait for 1 second
+	Driver_go_straight(0, 0);
+	delay_ms(1000);
 	
-	byte stop = 0;
-	// ===========================================================
-		for (i=0;i<MAZE_SIZE; i++)
-			for (j=0; j<MAZE_SIZE; j++){
-				path_1_global[i*MAZE_SIZE +j]= maze_array_global[i][j];
-				general_purpose_array_1[i*MAZE_SIZE +j] = maze_dist_array_global[i][j];
-		}
-		
-		Driver_go_straight(0, 0);
-		delay_ms(1000);
 	
-//==============================================================
+	// Waitting for start signal
+	while (!READ_B(Driver_check_walls(), FRONT));
+	LED1_OFF;
+	while (READ_B(Driver_check_walls(), FRONT));
+	LED1_ON;
+	delay_ms(2000);
 	
-	// Initialize the maze;
+
+	// Initialize the maze.  row_Dest and collumn_Dest are in main. ??? I move it here
 	maze_initialize(row_Dest, column_Dest);
-	//initialization from origin
-	current_position_global[ROW_INDEX] = 0;
-	current_position_global[COLUMN_INDEX] = 0;
-		
-		// ===========================================================
-		for (i=0;i<MAZE_SIZE; i++)
-			for (j=0; j<MAZE_SIZE; j++){
-				path_1_global[i*MAZE_SIZE +j]= maze_array_global[i][j];
-				general_purpose_array_1[i*MAZE_SIZE +j] = maze_dist_array_global[i][j];
-		}
-		
-		Driver_go_straight(0, 0);
-		delay_ms(1000);
 	
-//==============================================================
-		
-	// Read first
+	
+	// Read first position. This position is given.. we dont need to read sensor
+	Driver_go_straight(90, speed);
 	maze_array_global[0][0] = 0x1E;
 	current_position_global[COLUMN_INDEX] ++;
-
-		
-		
 	
-	while(!stop) {
+	while(!STOP_FLAG) {
 		
 		while ((current_position_global[ROW_INDEX] != row_Dest)||(current_position_global[COLUMN_INDEX] != column_Dest )){
 
@@ -416,51 +559,91 @@ void Runner_explore(int speed ){
 			else if (current_direction_global == NORTH)
 				current_position_global[ROW_INDEX]--;
 
-		} // While loop
-			
+		} // While loop for first run
+		
+		// After reach destination.. We need to get the path to the ultimate destination first
+		path_count = store_path();
+		
+		// Case 1: We already got a good path
+		if (path_count < GOOD_PATH){
+			// Ask the mouse to return the start point
 			row_Dest = 0; 
 			column_Dest = 0;
-			if((current_position_global[ROW_INDEX] == row_Dest) && (current_position_global[COLUMN_INDEX] == column_Dest)){
-				 stop = 1;
-			}
-			//maze_initialize(row_Dest,column_Dest);
+			
+			// reinitialize the maze
+			maze_initialize(row_Dest, column_Dest);
+			
+			//set start point as unvisited
 			CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
+			
+			RUN = RETURN_RUN;
+			
+		// Case 2: Finish first explore. Set up for second explore
+		} else if (RUN == FIRST_RUN){
+			// Ask the mouse to explore more to the start point
+			row_Dest = 0; 
+			column_Dest = 0;
+			
+			// reinitialize the maze
+			maze_initialize(row_Dest, column_Dest);
+			//set start point and finish point as visited
+			CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
+			
+			RUN = SECOND_RUN;
+			
+		// Case 3: On second run already but can not find good path.
+		// Pray..
+		} else if (RUN == SECOND_RUN) {
+			
+			Driver_go_straight(0, 0);
+			delay_ms(1000);
+		
+			// Make a u-turn
+			Driver_go_straight(90,speed);
+			Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
+			Driver_frontwall_correction();
+			Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
+			Driver_go_straight(0,0);
+				
+			STOP_FLAG = 1;
+			
+		// Case RETURN_RUN	
+		} else if (RUN == RETURN_RUN){
+			
+			Driver_go_straight(0, 0);
+			delay_ms(1000);
+		
+			// Make a u-turn
+			Driver_go_straight(90,speed);
+			Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
+			Driver_frontwall_correction();
+			Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
+			Driver_go_straight(0,0);
+				
+			STOP_FLAG = 1;
+			
+		}
 	}
 	
-	/*
-	 ===========================================================
-		for (i=0;i<MAZE_SIZE; i++)
-			for (j=0; j<MAZE_SIZE; j++){
-				path_1_global[i*MAZE_SIZE +j]= maze_array_global[i][j];
-				path_2_global[i*MAZE_SIZE +j] = maze_dist_array_global[i][j];
-		}
-			
-		
-		Driver_go_straight(0, 0);
-  	delay_ms(1000);
-==============================================================
-	*/
-	//Driver_go_straight(0,0);
-	//delay_ms(1000);
-	
-	Driver_go_straight(90,speed);
-	Driver_go_straight(0,0);
-	
-	//delay_ms(1000);
-	
-	//CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
-	//maze_dist_array_global[row_Dest][column_Dest] = 0;
-	//maze_floodfill();
-	store_path();
-
 	
 } // End method
 	
+
+
+
 void Runner_run(int speed){
 
 		byte path_count;
 	
 	  //path index is the size of the path_run_array
+	
+		Driver_go_straight(0,0);
+		// Waitting for start signal
+		while (!READ_B(Driver_check_walls(), FRONT));
+		LED2_OFF;
+		while (READ_B(Driver_check_walls(), FRONT));
+		LED2_ON;
+		delay_ms(2000);
 		
 		for(path_count = 1; path_count < path_index; path_count ++){
 			switch(path_run_global[path_count]){

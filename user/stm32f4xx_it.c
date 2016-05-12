@@ -55,6 +55,8 @@
   * @param  None
   * @retval None
   */
+	
+	
 void NMI_Handler(void)
 {
 }
@@ -143,13 +145,12 @@ void PendSV_Handler(void)
   * @param  None
   * @retval None
   */
-void SysTick_Handler(void)
-{
-	
+void SysTick_Handler(void){	
 	Millis++;
-	if (!(Millis&1))
+	if ((!(Millis&1))&&(PID_EN==ENABLE)){
 		pid_motor_speed();
 		systick();
+	}
 }
 
 

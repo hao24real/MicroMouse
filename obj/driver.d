@@ -37,6 +37,7 @@
 ..\obj\driver.o: ..\ST_Libraries\inc\stm32f4xx_usart.h
 ..\obj\driver.o: ..\ST_Libraries\inc\stm32f4xx_wwdg.h
 ..\obj\driver.o: ..\ST_Libraries\inc\misc.h
+..\obj\driver.o: ..\user\stm32f4xx_it.h
 ..\obj\driver.o: ..\user_Libraries\inc\delay.h
 ..\obj\driver.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 ..\obj\driver.o: ..\user_Libraries\inc\led.h

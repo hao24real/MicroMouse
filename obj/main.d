@@ -37,6 +37,7 @@
 ..\obj\main.o: ..\ST_Libraries\inc\stm32f4xx_wwdg.h
 ..\obj\main.o: ..\ST_Libraries\inc\misc.h
 ..\obj\main.o: ..\user\Controller.h
+..\obj\main.o: ..\user\stm32f4xx_it.h
 ..\obj\main.o: ..\user_Libraries\inc\delay.h
 ..\obj\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 ..\obj\main.o: ..\user_Libraries\inc\led.h
