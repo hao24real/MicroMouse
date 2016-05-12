@@ -42,8 +42,10 @@ void BFS_floodfill(){
 
 	//columns are for indicating the position of cell
 	byte stack_cell1[MAZE_SIZE * MAZE_SIZE][2];
-	byte stack_cell2[MAZE_SIZE * MAZE_SIZE][2];
-
+	byte stack_cell2[MAZE_SIZE * MAZE_SIZE][2]; 
+	//2 byte for row,column in each index of stack, no real stack so use array
+		
+		
 	byte index_stack1 = 0;
 	byte index_stack2 = 0;
 
@@ -52,14 +54,38 @@ void BFS_floodfill(){
 
 	bool reach_origin = 0;
 
+	//push the first destination to the stack
+	stack_cell1[index_stack1][ROW_INDEX] = row_Dest;
+	stack_cell1[index_stack1][COLUMN_INDEX] = column_Dest;
+	SET_B(maze_array_global[stack_cell1[index_stack1][ROW_INDEX]][stack_cell1[index_stack1][COLUMN_INDEX]], FLOODED);
+	count_stack1++;
+	
 	//only terminate when simulation of MM reach 
 	while(!reach_origin){
 
+		maze_dist_array_global[stack_cell1[index_stack1][ROW_INDEX]][stack_cell1[index_stack1][COLUMN_INDEX]] ;
 		while(count_stack1 != 0 && !reach_origin){
-			
+			//check north wall
+			//then check visited and flooded
+			if(!READ_B(maze_array_global[stack_cell1[index_stack1][ROW_INDEX]][stack_cell1[index_stack1][COLUMN_INDEX]], NORTH)){
+				if(!READ_B(maze_array_global[stack_cell1[index_stack1][ROW_INDEX]-1][stack_cell1[index_stack1][COLUMN_INDEX]], FLOODED)
+					&& !READ_B(maze_array_global[stack_cell1[index_stack1][ROW_INDEX]-1][stack_cell1[index_stack1][COLUMN_INDEX]], VISITED)) {
 
+				}
+			}
+			
+			
+			if(
+				
+			if
+				
+			if
+			
+			
 		}
 		while(count_stack2 != 0 && !reach_origin){
+
+
 
 		}
 
@@ -78,8 +104,6 @@ void maze_floodfill(){
 	
 	byte row, column, counter;
 	byte min_neighbor;
-	
-
 	
 	// Change this..
 	for(counter = 0; counter < MAZE_SIZE*MAZE_SIZE;counter++)
@@ -137,14 +161,13 @@ void store_path(){
 	row_Dest = MAZE_SIZE -1;
 	column_Dest = MAZE_SIZE -1;
 	
-	CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
-	maze_dist_array_global[row_Dest][column_Dest] = 0;
+	//set start point and finish point as visited
+	SET_B(maze_array_global[0][0], VISITED);
+	SET_B(maze_array_global[row_Dest][column_Dest], VISITED);
 	
 	maze_initialize(row_Dest, column_Dest);
+	
 	maze_floodfill();	
-
-	SET_B(maze_array_global[0][0], VISITED);
-	//maze_floodfill_visited();
 	
 	debug_dist();
 	
@@ -443,11 +466,15 @@ void Runner_explore(int speed ){
 			if((current_position_global[ROW_INDEX] == row_Dest) && (current_position_global[COLUMN_INDEX] == column_Dest)){
 				 stop = 1;
 			}
-			maze_initialize(row_Dest,column_Dest);
-			CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
+			else{
+				maze_initialize(row_Dest,column_Dest);
+				CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
+			}
 	}
-	//set start point and finish point as visited
-	SET_B()
+	
+	
+	
+	
 	/*
 	 ===========================================================
 		for (i=0;i<MAZE_SIZE; i++)
