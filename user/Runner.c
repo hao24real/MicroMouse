@@ -319,11 +319,13 @@ void store_path(){
 	
 	//set start point and finish point as visited
 	SET_B(maze_array_global[0][0], VISITED);
-	SET_B(maze_array_global[row_Dest][column_Dest], VISITED);
+	CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
 	
 	maze_initialize(row_Dest, column_Dest);
 	
-	BFS_floodfill();
+	maze_floodfill();
+	
+	SET_B(maze_array_global[row_Dest][column_Dest], VISITED);
 	
 	debug_dist();
 	
@@ -621,7 +623,7 @@ void Runner_explore(int speed ){
 				 stop = 1;
 			}
 			else{
-				maze_initialize(row_Dest,column_Dest);
+				//maze_initialize(row_Dest,column_Dest);
 				CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
 			}
 	}
