@@ -13,8 +13,8 @@
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
  
-#define TURN_LEFT_ANGLE 90
-#define TURN_RIGHT_ANGLE 88
+#define TURN_LEFT_ANGLE 88
+#define TURN_RIGHT_ANGLE 86
 #define FIRST_RUN 1
 #define SECOND_RUN 2
 #define THIRD_RUN 3
@@ -35,6 +35,9 @@ byte next_position;
 byte next_dist, east_neighbor, south_neighbor, west_neighbor, north_neighbor;
 
 byte path_index;
+
+byte sorted_path_index;
+byte sorted_path_array[MAZE_SIZE*MAZE_SIZE][2];
 	
 
 void maze_initialize(byte row_dest, byte column_dest){
@@ -725,10 +728,9 @@ void Runner_explore(int speed ){
 				delay_ms(100);
 				Driver_turn_right(0,TURN_RIGHT_ANGLE, speed);
 				Driver_go_straight(0,0);
-				delay_ms(50);
 				Driver_go_straight(90, speed);
+				delay_ms(50);
 
-					
 
 				current_direction_global = next_position;
 				
@@ -746,9 +748,8 @@ void Runner_explore(int speed ){
 					
 					Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
 					Driver_go_straight(0,0);
-					delay_ms(50);
 					Driver_go_straight(90, speed);
-					
+					delay_ms(50);
 				
 				
 				current_direction_global = next_position;
@@ -765,12 +766,10 @@ void Runner_explore(int speed ){
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();		
+				
 				Driver_turn_left(0,TURN_LEFT_ANGLE, speed);
 
-				if (READ_B(walls_FLBR, FRONT))
-					Driver_frontwall_correction();			
 				Driver_go_straight(90, speed);
-				
 				
 				current_direction_global = BACK_DIRECT(current_direction_global);
 			} 
@@ -797,8 +796,12 @@ void Runner_explore(int speed ){
 			else if (current_direction_global == NORTH)
 				current_position_global[ROW_INDEX]--;
 
+			// if(!((current_position_global[ROW_INDEX] == row_Dest) && (current_position_global[COLUMN_INDEX] == column_Dest)))
+			// 	Driver_go_straight(90, speed);
+
 		} // While loop for first run
 		
+		Driver_go_straight(0,0);
 
 		row_Dest = ROW_DEST;
 		column_Dest = COLUMN_DEST;
@@ -901,6 +904,42 @@ void Runner_explore(int speed ){
 // 			CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
 
 
+void sort_path(){
+
+	byte path_count;
+
+	byte cell_count = 1;
+	sorted_path_index = 0;
+	
+
+	 //path index is the size of the path_run_array
+	printf("path in runner_run: ");
+	for(path_count = 1; path_count < path_index; path_count ++){
+		printf("%d ", path_run_global[path_count]);
+
+		switch(path_run_global[path_count]){
+			case FRONT:
+				cell_count = 1;
+				while(path_run_global[path_count+1] == FRONT){
+					cell_count ++;
+					path_count++;
+				}
+				sorted_path_array[sorted_path_index][0] = FRONT;
+				sorted_path_array[sorted_path_index][1] = cell_count;
+				break;
+			case RIGHT:
+				sorted_path_array[sorted_path_index][0] = RIGHT;
+				sorted_path_array[sorted_path_index][1] = 1;
+				break;
+			case LEFT:
+				sorted_path_array[sorted_path_index][0] = LEFT;
+				sorted_path_array[sorted_path_index][1] = 1;
+				break;
+		}
+
+		sorted_path_index ++;
+	}
+}
 
 
 void Runner_run(int speed){
@@ -916,7 +955,7 @@ void Runner_run(int speed){
 		while (READ_B(Driver_check_walls(), FRONT));
 		LED2_ON;
 		delay_ms(2000);
-		
+
 		printf("path in runner_run: ");
 		for(path_count = 0; path_count < path_index; path_count ++){
 			printf("%d ", path_run_global[path_count]);
@@ -957,6 +996,14 @@ void Runner_run(int speed){
 void Runner_run_onpost(int speed){
 
 		byte path_count;
+	
+		Driver_go_straight(0,0);
+		// Waitting for start signal
+		while (!READ_B(Driver_check_walls(), FRONT));
+		LED2_OFF;
+		while (READ_B(Driver_check_walls(), FRONT));
+		LED2_ON;
+		delay_ms(10000);
 	
 	  //path index is the size of the path_run_array
 		for(path_count = 0; path_count < path_index; path_count ++){

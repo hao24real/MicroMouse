@@ -52,14 +52,17 @@ int main(void) {
 		switch (MODE){
 		
 			case MODE_EXPLORE:
+																
+																LED1_ON;
 																Runner_explore(60);
 																MODE = MODE_SPEED_RUN;
-																LED1_ON;
 																break;
 			case MODE_SPEED_RUN:
+																
 																Runner_run(80);
-																MODE = MODE_DEFAULT;
 																LED2_ON;
+																MODE = MODE_3;
+																
 																break;
 			case MODE_2:							
 																Driver_check_walls();
@@ -68,8 +71,9 @@ int main(void) {
 																LED3_ON;
 																break;
 			case MODE_3:
-					//Runner_run_onpost(80);
-																LED4_ON;												
+																LED4_ON;
+																Runner_run_onpost(200);
+																MODE = MODE_DEFAULT;
 																break;
 			case MODE_4:
 				//Runner_run_onpost(80);
