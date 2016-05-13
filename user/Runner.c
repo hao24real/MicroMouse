@@ -319,11 +319,26 @@ void debug_dist(){
 	for( i = 0; i < MAZE_SIZE; i++){
 		printf("|");
 		for(j = 0; j < MAZE_SIZE; j++){
-			printf("%3d|", path_1_global[(i*6)+ j ] = maze_dist_array_global[i][j]);
+			printf("%4d|", path_1_global[(i*6)+ j ] = maze_dist_array_global[i][j]);
 		}
 		printf("\n");
 	}
 }
+
+void debug_wall(){
+	int i;
+	int j;
+	for( i = 0; i < MAZE_SIZE; i++){
+		printf("|");
+		for(j = 0; j < MAZE_SIZE; j++){
+			printf("0x%x | ", maze_array_global[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+
+
 	
 /* 
  * This Method find and store the shortest path from begining to center
@@ -350,7 +365,7 @@ byte store_path(byte row_Dest, byte column_Dest){
 	
 	//row_Dest = MAZE_SIZE -1;
 	//column_Dest = MAZE_SIZE -1;
-	
+
 	//set start point and finish point as visited
 	SET_B(maze_array_global[0][0], VISITED);
 	CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
@@ -362,30 +377,36 @@ byte store_path(byte row_Dest, byte column_Dest){
 	SET_B(maze_array_global[row_Dest][column_Dest], VISITED);
 	
 	debug_dist();
+	debug_wall();
 
 	// b. initialize the array for turning 
 	for(index = 0; index < MAZE_SIZE * MAZE_SIZE; index++)
 		path_run_global[index] = 0;
 
+
+
 	// c. Assume we start from origin
 	current_position_local[ROW_INDEX] = 0;
 	current_position_local[COLUMN_INDEX] = 0;
 	
+
   // d. While loop until we find the center or we can not reach to the center
 	//    because of the ifinite loop causing by unvisited cell.
 	//    if path_index >= MAZE_SIZE*MAZE_SIZE - 1 -> that means there is another shorter way need to explore
-	while(((current_position_local[ROW_INDEX] != MAZE_SIZE -1)||
-				(current_position_local[COLUMN_INDEX] != MAZE_SIZE - 1 ))&&
+	while(((current_position_local[ROW_INDEX] != row_Dest)||
+				(current_position_local[COLUMN_INDEX] != column_Dest ))&&
 				(path_index < MAZE_SIZE*MAZE_SIZE - 2)){
 		
 		current_dist = maze_dist_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]];	
 		
+		printf("current distance: %d\n", current_dist);
 		// Check EAST neighbor
 		if (!READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]], EAST)){		
-			east_neighbor_dist = maze_dist_array_global[current_position_global[ROW_INDEX]][current_position_global[COLUMN_INDEX]+1];
+			east_neighbor_dist = maze_dist_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]+1];
 			if ((current_dist == (east_neighbor_dist + 1) )
 				&& READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX] + 1] ,VISITED)) 
 			{
+				printf("east_neighbor: %d\n", east_neighbor_dist);
 				next_position_local = EAST;
 			}
 		}
@@ -396,6 +417,7 @@ byte store_path(byte row_Dest, byte column_Dest){
 			if ((current_dist == (north_neighbor_dist + 1)) 
 				 && READ_B(maze_array_global[current_position_local[ROW_INDEX]-1][current_position_local[COLUMN_INDEX]] ,VISITED))
 			{
+				printf("north_neighbor: %d\n", north_neighbor_dist);
 				next_position_local = NORTH;
 			}
 		}
@@ -406,6 +428,7 @@ byte store_path(byte row_Dest, byte column_Dest){
 			if ((current_dist == (west_neighbor_dist + 1)) 
 				&& READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]-1] ,VISITED))
 			{
+				printf("west_neighbor: %d\n", west_neighbor_dist);
 				next_position_local = WEST;
 			}
 		}
@@ -413,12 +436,17 @@ byte store_path(byte row_Dest, byte column_Dest){
 		// Check SOUTH neighbor
 		if (!READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]], SOUTH)){
 		  south_neighbor_dist = maze_dist_array_global[current_position_local[ROW_INDEX]+1][current_position_local[COLUMN_INDEX]];
+			printf("south_neighbor before: %d\n", south_neighbor_dist);
 			if ((current_dist == (south_neighbor_dist + 1))
-				&& READ_B(maze_array_global[current_position_local[ROW_INDEX]+1][current_position_local[COLUMN_INDEX]] ,VISITED))
+				&& READ_B(maze_array_global[current_position_local[ROW_INDEX] + 1][current_position_local[COLUMN_INDEX]] ,VISITED))
 			{
+				printf("south_neighbor: %d\n", south_neighbor_dist);
 				next_position_local = SOUTH;
 			}
 		}
+
+		printf("next_position: %d\n", next_position_local);
+		// delay_ms(1000);
 
 		if(next_position_local == current_direction_local)
 			path_run_global[path_index] = FRONT;
@@ -448,9 +476,10 @@ byte store_path(byte row_Dest, byte column_Dest){
 	}
 	// turn off indicator
 	LED1_OFF;
-	
+
+	printf("path in store path: ");
 	for(index = 0; index < path_index; index++){
-		printf("%s%d ","path in runner_run: " , path_run_global[index]);
+		printf("%d ", path_run_global[index]);
 	}
 	printf("\n");
 
@@ -888,8 +917,9 @@ void Runner_run(int speed){
 		LED2_ON;
 		delay_ms(2000);
 		
+		printf("path in runner_run: ");
 		for(path_count = 0; path_count < path_index; path_count ++){
-			printf("%s%d ","path in runner_run: " , path_run_global[path_count]);
+			printf("%d ", path_run_global[path_count]);
 
 			switch(path_run_global[path_count]){
 				case FRONT:

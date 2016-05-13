@@ -42,7 +42,7 @@
 
 #define START_DIRECTION 0
 
-#define MAZE_SIZE 4
+#define MAZE_SIZE 6
 
 #define GENERAL_ARRAY_SIZE 256 
 
