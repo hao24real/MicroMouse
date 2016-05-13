@@ -13,7 +13,7 @@
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
  
-#define TURN_LEFT_ANGLE 90
+#define TURN_LEFT_ANGLE 87
 #define TURN_RIGHT_ANGLE 90
 #define FIRST_RUN 1
 #define SECOND_RUN 2
