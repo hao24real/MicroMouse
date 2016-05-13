@@ -54,12 +54,12 @@ int main(void) {
 			case MODE_EXPLORE:
 																
 																LED1_ON;
-																Runner_explore(70);
+																Runner_explore(90);
 																MODE = MODE_SPEED_RUN;
 																break;
 			case MODE_SPEED_RUN:
 																
-																Runner_run(150);
+																Runner_run(110);
 																LED2_ON;
 																MODE = MODE_DEFAULT;
 																
@@ -68,11 +68,24 @@ int main(void) {
 																Driver_check_walls();
 																printf("FLSensor: %d\n", FLSensor);
 																printf("FRSensor: %d\n\n", FRSensor);
+																printf("DLSensor: %d\n", DLSensor);
+																printf("DRSensor: %d\n\n", DRSensor);
 																LED3_ON;
 																break;
 			case MODE_3:
 																LED4_ON;
-																Runner_run_onpost(150);
+																Driver_turn_right(0, 45, 50);
+																Driver_go_straight(0,0);
+																delay_ms(1000);
+																Driver_turn_right(0, 45, 50);
+																Driver_go_straight(0,0);
+																delay_ms(1000);
+																Driver_turn_right(0, 45, 50);
+																Driver_go_straight(0,0);
+																delay_ms(1000);
+																Driver_turn_right(0, 45, 50);
+																Driver_go_straight(0,0);
+																delay_ms(1000);
 																MODE = MODE_DEFAULT;
 																break;
 			case MODE_4:
