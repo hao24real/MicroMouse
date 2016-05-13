@@ -54,14 +54,14 @@ int main(void) {
 			case MODE_EXPLORE:
 																
 																LED1_ON;
-																Runner_explore(60);
+																Runner_explore(70);
 																MODE = MODE_SPEED_RUN;
 																break;
 			case MODE_SPEED_RUN:
 																
-																Runner_run(80);
+																Runner_run(150);
 																LED2_ON;
-																MODE = MODE_3;
+																MODE = MODE_DEFAULT;
 																
 																break;
 			case MODE_2:							
@@ -72,12 +72,15 @@ int main(void) {
 																break;
 			case MODE_3:
 																LED4_ON;
-																Runner_run_onpost(200);
+																Runner_run_onpost(150);
 																MODE = MODE_DEFAULT;
 																break;
 			case MODE_4:
 				//Runner_run_onpost(80);
 																LED5_ON;
+																Driver_go_straight(720, 30);
+																Driver_go_straight(0,0);
+																MODE = MODE_DEFAULT;
 																break;
 			case MODE_CALIBRATE:
 																Controller_maze_calibrate();

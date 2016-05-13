@@ -13,8 +13,8 @@
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
  
-#define TURN_LEFT_ANGLE 88
-#define TURN_RIGHT_ANGLE 86
+#define TURN_LEFT_ANGLE 90
+#define TURN_RIGHT_ANGLE 90
 #define FIRST_RUN 1
 #define SECOND_RUN 2
 #define THIRD_RUN 3
@@ -39,6 +39,42 @@ byte path_index;
 byte sorted_path_index;
 byte sorted_path_array[MAZE_SIZE*MAZE_SIZE][2];
 	
+void sort_path(){
+
+	byte path_count;
+
+	byte cell_count = 1;
+	sorted_path_index = 0;
+	
+
+	 //path index is the size of the path_run_array
+	printf("path in runner_run: ");
+	for(path_count = 1; path_count < path_index; path_count ++){
+		printf("%d ", path_run_global[path_count]);
+
+		switch(path_run_global[path_count]){
+			case FRONT:
+				cell_count = 1;
+				while(path_run_global[path_count+1] == FRONT){
+					cell_count ++;
+					path_count++;
+				}
+				sorted_path_array[sorted_path_index][0] = FRONT;
+				sorted_path_array[sorted_path_index][1] = cell_count;
+				break;
+			case RIGHT:
+				sorted_path_array[sorted_path_index][0] = RIGHT;
+				sorted_path_array[sorted_path_index][1] = 1;
+				break;
+			case LEFT:
+				sorted_path_array[sorted_path_index][0] = LEFT;
+				sorted_path_array[sorted_path_index][1] = 1;
+				break;
+		}
+
+		sorted_path_index ++;
+	}
+}
 
 void maze_initialize(byte row_dest, byte column_dest){
 	byte row, column;
@@ -872,6 +908,7 @@ void Runner_explore(int speed ){
 		}
 	}
 	
+	sort_path();
 	
 	
 } // End method
@@ -904,43 +941,6 @@ void Runner_explore(int speed ){
 // 			CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
 
 
-void sort_path(){
-
-	byte path_count;
-
-	byte cell_count = 1;
-	sorted_path_index = 0;
-	
-
-	 //path index is the size of the path_run_array
-	printf("path in runner_run: ");
-	for(path_count = 1; path_count < path_index; path_count ++){
-		printf("%d ", path_run_global[path_count]);
-
-		switch(path_run_global[path_count]){
-			case FRONT:
-				cell_count = 1;
-				while(path_run_global[path_count+1] == FRONT){
-					cell_count ++;
-					path_count++;
-				}
-				sorted_path_array[sorted_path_index][0] = FRONT;
-				sorted_path_array[sorted_path_index][1] = cell_count;
-				break;
-			case RIGHT:
-				sorted_path_array[sorted_path_index][0] = RIGHT;
-				sorted_path_array[sorted_path_index][1] = 1;
-				break;
-			case LEFT:
-				sorted_path_array[sorted_path_index][0] = LEFT;
-				sorted_path_array[sorted_path_index][1] = 1;
-				break;
-		}
-
-		sorted_path_index ++;
-	}
-}
-
 
 void Runner_run(int speed){
 
@@ -956,36 +956,21 @@ void Runner_run(int speed){
 		LED2_ON;
 		delay_ms(2000);
 
+		Driver_go_straight(90, speed);
+
 		printf("path in runner_run: ");
-		for(path_count = 0; path_count < path_index; path_count ++){
+		for(path_count = 0; path_count < sorted_path_index; path_count ++){
 			printf("%d ", path_run_global[path_count]);
 
-			switch(path_run_global[path_count]){
+			switch(sorted_path_array[path_count][0]){
 				case FRONT:
-					if(path_run_global[path_count+1] == RIGHT){
-						Driver_go_straight(90,speed);
-						Driver_turn_right(90, 90, speed);
-						Driver_go_straight(90,speed);
-						//Driver_turn_right_onpost(90, speed);
-						path_count ++;
-					}
-					else if(path_run_global[path_count+1] == LEFT){
-						Driver_go_straight(90,speed);
-						Driver_turn_left(90, 90, speed);
-						Driver_go_straight(90,speed);
-						//Driver_turn_left_onpost(90, speed);
-						path_count++;
-					}
-					else
-						Driver_go_straight(180, speed);
+					Driver_go_straight(180 * sorted_path_array[path_count][1],speed);
 					break;
 				case RIGHT:
-					Driver_turn_right(0, 90, speed);
-					Driver_go_straight(180, speed);
+					Driver_turn_right(90, 90, speed);
 					break;
 				case LEFT:
-					Driver_turn_left(0, 90, speed);
-					Driver_go_straight(180, speed);
+					Driver_turn_left(90, 90, speed);
 					break;
 			}
 		}
