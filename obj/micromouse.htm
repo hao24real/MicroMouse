@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\obj\micromouse.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\obj\micromouse.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Fri May 13 03:55:20 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Fri May 13 04:21:30 2016
 <BR><P>
 <H3>Maximum Stack Usage =        320 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1469,12 +1469,13 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;store_path
 </UL>
 
-<P><STRONG><a name="[e3]"></a>store_path</STRONG> (Thumb, 720 bytes, Stack size 48 bytes, runner.o(.text))
+<P><STRONG><a name="[e3]"></a>store_path</STRONG> (Thumb, 756 bytes, Stack size 48 bytes, runner.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208 + Unknown Stack Size
 <LI>Call Chain = store_path &rArr; debug_dist &rArr; __2printf &rArr; _printf_char_file &rArr; _printf_char_common &rArr; __printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
+<LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 <LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_dist
 <LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;maze_floodfill
 <LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;maze_initialize_max
@@ -1482,7 +1483,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_explore
 </UL>
 
-<P><STRONG><a name="[b4]"></a>Runner_explore</STRONG> (Thumb, 1298 bytes, Stack size 32 bytes, runner.o(.text))
+<P><STRONG><a name="[b4]"></a>Runner_explore</STRONG> (Thumb, 1334 bytes, Stack size 32 bytes, runner.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 240 + Unknown Stack Size
 <LI>Call Chain = Runner_explore &rArr; store_path &rArr; debug_dist &rArr; __2printf &rArr; _printf_char_file &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -1501,12 +1502,14 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[b5]"></a>Runner_run</STRONG> (Thumb, 246 bytes, Stack size 16 bytes, runner.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = Runner_run &rArr; Driver_turn_right &rArr; Controller_run &rArr; readSensor &rArr; readADC &rArr; ADC_RegularChannelConfig
+<P><STRONG><a name="[b5]"></a>Runner_run</STRONG> (Thumb, 262 bytes, Stack size 16 bytes, runner.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 160 + Unknown Stack Size
+<LI>Call Chain = Runner_run &rArr; __2printf &rArr; _printf_char_file &rArr; _printf_char_common &rArr; __printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_check_walls
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
+<LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 <LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_go_straight
 <LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_turn_right
 <LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Driver_turn_left
@@ -2182,12 +2185,14 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_char_file
 </UL>
-<BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Called By]<UL><LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Runner_run
+<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;inputDigits
 <LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;inputString
 <LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;inputDigit
 <LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;inputChar
 <LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetChar
+<LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;store_path
 <LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_dist
 </UL>
 

@@ -449,6 +449,12 @@ byte store_path(byte row_Dest, byte column_Dest){
 	// turn off indicator
 	LED1_OFF;
 	
+	for(index = 0; index < path_index; index++){
+		printf("%s%d ","path in runner_run: " , path_run_global[index]);
+	}
+	printf("\n");
+
+
 	// return number of cell
 	return path_index;
 }
@@ -883,6 +889,8 @@ void Runner_run(int speed){
 		delay_ms(2000);
 		
 		for(path_count = 0; path_count < path_index; path_count ++){
+			printf("%s%d ","path in runner_run: " , path_run_global[path_count]);
+
 			switch(path_run_global[path_count]){
 				case FRONT:
 					if(path_run_global[path_count+1] == RIGHT){
