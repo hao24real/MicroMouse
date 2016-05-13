@@ -12,19 +12,23 @@ byte path_1_global[MAZE_SIZE*MAZE_SIZE];
 byte general_purpose_array_1[GENERAL_ARRAY_SIZE];
 byte general_purpose_array_2[GENERAL_ARRAY_SIZE];
 byte path_run_global[MAZE_SIZE * MAZE_SIZE];
-// Change_flag for flood fill algorithm
-byte row_Dest = MAZE_SIZE-1, column_Dest = MAZE_SIZE-1;
 
 int main(void) {
 
 	byte i;
 	byte j;
+	
+	// 1. HARDWARE INITIALIZE
 	Controller_hardware_init();
-	
-	current_direction_global = START_DIRECTION;
-	
 	LED4_ON;
 	
+	// 2. INITIALIZE GLOABL VARIABLES
+	// a. current postion global, current direction global
+	current_position_global[ROW_INDEX] = 0;
+	current_position_global[COLUMN_INDEX] = 0;
+	current_direction_global = START_DIRECTION;
+
+	// b. maze distance array global
 	for(i = 0; i < MAZE_SIZE; i++){
 		for(j = 0; j < MAZE_SIZE; j++){
 			maze_dist_array_global[i][j] = 0;
@@ -32,6 +36,7 @@ int main(void) {
 		}
 	}
 	
+	// c. maze walls info array
 	for(i = 0 ; i < MAZE_SIZE; i++){
 		SET_B(maze_array_global[i][0],WEST);
 		SET_B(maze_array_global[0][i],NORTH);
@@ -39,24 +44,47 @@ int main(void) {
 		SET_B(maze_array_global[MAZE_SIZE-1][i], SOUTH);
 	}
 	SET_B(maze_array_global[0][0], SOUTH);
+
 	
+	// 3. START PROGRAM ---
+  while (1){
 
-	Runner_explore(60);
-
-
-	while(1){
-		delay_ms(10000);
-		Runner_run(80);
-	
-		delay_ms(10000);
-		Runner_run(70);
+		switch (MODE){
 		
-			delay_ms(10000);
-	Runner_run_onpost(80);
+			case MODE_EXPLORE:
+																Runner_explore(60);
+																MODE = MODE_SPEED_RUN;
+																LED1_ON;
+																break;
+			case MODE_SPEED_RUN:
+																Runner_run(80);
+																MODE = MODE_DEFAULT;
+																LED2_ON;
+																break;
+			case MODE_2:							
+																Driver_check_walls();
+																printf("FLSensor: %d\n", FLSensor);
+																printf("FRSensor: %d\n\n", FRSensor);
+																LED3_ON;
+																break;
+			case MODE_3:
+					//Runner_run_onpost(80);
+																LED4_ON;												
+																break;
+			case MODE_4:
+				//Runner_run_onpost(80);
+																LED5_ON;
+																break;
+			case MODE_CALIBRATE:
+																Controller_maze_calibrate();
+																LED6_ON;
+																break;
+			default:
+																LED4_ON;
+																break;
+		}
 	
-	delay_ms(10000);
-	Runner_run_onpost(70);
-	
+		
 	}
 
 

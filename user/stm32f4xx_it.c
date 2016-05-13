@@ -55,6 +55,8 @@
   * @param  None
   * @retval None
   */
+	
+	
 void NMI_Handler(void)
 {
 }
@@ -143,13 +145,12 @@ void PendSV_Handler(void)
   * @param  None
   * @retval None
   */
-void SysTick_Handler(void)
-{
-	
+void SysTick_Handler(void){	
 	Millis++;
-	if (!(Millis&1))
+	if ((!(Millis&1))&&(PID_EN==ENABLE)){
 		pid_motor_speed();
 		systick();
+	}
 }
 
 
@@ -175,10 +176,11 @@ void SysTick_Handler(void)
 
 void EXTI9_5_IRQHandler(void) {
 	
-	
-	
+  //__disable_irq();
 	if(EXTI_GetITStatus(EXTI_Line5) != RESET) {
-		//debounce the button
+		
+    
+    //debounce the button
 	  delay_ms(200);
 		
 		button1_interrupt();
@@ -186,25 +188,19 @@ void EXTI9_5_IRQHandler(void) {
 		EXTI_ClearITPendingBit(EXTI_Line5);
 	}
 	
-	
-	
-}
-
-
-void EXTI15_10_IRQHandler(void) {
-	
-	
-	if(EXTI_GetITStatus(EXTI_Line13) != RESET) 
+	else	if(EXTI_GetITStatus(EXTI_Line8) != RESET) 
   {
 		//debounce the button
 	  delay_ms(200);
 	  
 		button2_interrupt();
 		
-		EXTI_ClearITPendingBit(EXTI_Line13);
+		EXTI_ClearITPendingBit(EXTI_Line8);
 		
 	}
-	
+
+  //__enable_irq();
+
 }
 
 

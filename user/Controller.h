@@ -3,6 +3,7 @@
 
 #include "stm32f4xx.h"
 #include "stm32f4xx_flash.h"
+#include "stm32f4xx_it.h"
 #include "delay.h"
 #include "led.h"
 #include "button.h"
@@ -18,11 +19,20 @@
 #include "adc.h"
 #include "pid.h"
 
-#define FL_THRESHOLD 350
-#define FR_THRESHOLD 550
+
+#define ENABLE 1
+#define DISABLE 0
+
+
+#define FL_THRESHOLD 250
+#define FR_THRESHOLD 350
 #define DL_THRESHOLD 350
 #define DR_THRESHOLD 300
 
+
+
+extern byte PID_EN;
+extern byte MODE;
 
 
 void systick(void);

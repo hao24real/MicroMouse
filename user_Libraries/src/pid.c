@@ -11,10 +11,6 @@
 #define FR_SENSOR 2500
 
 
-
-volatile unsigned char pid_moto_ENABLE = 0;
-volatile unsigned char RESET_ENC_FLAG;
-
 int ERR_LEFT_TO_PID;
 int ERR_RIGHT_TO_PID;
 

@@ -47,6 +47,15 @@
 #define GENERAL_ARRAY_SIZE 256 
 
 
+#define MODE_EXPLORE 0
+#define MODE_SPEED_RUN 1
+#define MODE_2 2
+#define MODE_3 3
+#define MODE_4 4
+#define MODE_CALIBRATE 5
+#define MODE_DEFAULT 7
+
+
 typedef unsigned char byte;
 
 
@@ -56,9 +65,6 @@ extern byte current_position_global[2];
 //bit indicate wall info and visited
 extern byte maze_array_global[MAZE_SIZE][MAZE_SIZE];
 
-// Change_flag for flood fill algorithm
-extern byte row_Dest, column_Dest;
-
 
 //path in there
 extern byte path_1_global[MAZE_SIZE*MAZE_SIZE];
@@ -66,4 +72,6 @@ extern byte general_purpose_array_1[GENERAL_ARRAY_SIZE];
 extern byte general_purpose_array_2[GENERAL_ARRAY_SIZE];
 extern byte maze_dist_array_global[MAZE_SIZE][MAZE_SIZE];
 extern byte path_run_global[MAZE_SIZE*MAZE_SIZE];
+
+
 #endif

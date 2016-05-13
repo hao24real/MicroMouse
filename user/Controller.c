@@ -9,6 +9,9 @@
 #define KI 0
 #define KD 0
 
+byte PID_EN = DISABLE;
+byte MODE = MODE_DEFAULT;
+
 int LEFT_WALL_DISTANCE = 1035;
 int RIGHT_WALL_DISTANCE = 1063;
 int FRONT_RIGHT_WALL_DISTANCE = 3251;
@@ -17,14 +20,14 @@ int FRONT_LEFT_WALL_DISTANCE = 2759;
 #define MAZE_ADRESS 0x08040000
 
 #define LEFT_WALL_DISTANCE_ADRESS 0x08040100
-#define RIGHT_WALL_DISTANCE_ADRESS 0x08040101
-#define FRONT_LEFT_WALL_DISTANCE_ADRESS 0x08040102
-#define FRONT_RIGHT_WALL_DISTANCE_ADRESS 0x08040103
+#define RIGHT_WALL_DISTANCE_ADRESS 0x08040104
+#define FRONT_LEFT_WALL_DISTANCE_ADRESS 0x08040108
+#define FRONT_RIGHT_WALL_DISTANCE_ADRESS 0x0804010C
 
-#define LEFT_WALL_THRESHOLD_ADRESS 0x08040104
-#define RIGHT_WALL_THRESHOLD_ADRESS 0x08040105
-#define FRONT_LEFT_WALL_THRESHOLD_ADRESS 0x08040106
-#define FRONT_RIGHT_THRESHOLD_ADRESS 0x08040107
+#define LEFT_WALL_THRESHOLD_ADRESS 0x08040110
+#define RIGHT_WALL_THRESHOLD_ADRESS 0x08040114
+#define FRONT_LEFT_WALL_THRESHOLD_ADRESS 0x08040118
+#define FRONT_RIGHT_THRESHOLD_ADRESS 0x0804011C
 
 
 #define VALID_ERR 15
@@ -46,7 +49,7 @@ void Controller_hardware_init(void) {
 	
 	Systick_Configuration();
 	LED_Configuration();
-	//button_Configuration();
+	button_Configuration();
 	usart1_Configuration(9600);
 	//SPI_Configuration();
   TIM4_PWM_Init();
@@ -174,6 +177,72 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 	ERR_RIGHT_TO_PID = 0;
 }
 
+
+
+
+void Controller_writeFlash(void){
+  int i, j;
+
+  setLeftSpeed(0);
+  setRightSpeed(0);
+  FLASH_Unlock();
+	
+
+  FLASH_ClearFlag( FLASH_FLAG_EOP|FLASH_FLAG_WRPERR|FLASH_FLAG_PGAERR|FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
+/**
+  * @brief  Erases a specified FLASH Sector.
+  *   
+  * @param  FLASH_Sector: The Sector number to be erased.
+  *          This parameter can be a value between FLASH_Sector_0 and FLASH_Sector_11
+  *    
+  * @param  VoltageRange: The device voltage range which defines the erase parallelism.  
+  *          This parameter can be one of the following values:
+  *            @arg VoltageRange_1: when the device voltage range is 1.8V to 2.1V, 
+  *                                  the operation will be done by byte (8-bit) 
+  *            @arg VoltageRange_2: when the device voltage range is 2.1V to 2.7V,
+  *                                  the operation will be done by half word (16-bit)
+  *            @arg VoltageRange_3: when the device voltage range is 2.7V to 3.6V,
+  *                                  the operation will be done by word (32-bit)
+  *            @arg VoltageRange_4: when the device voltage range is 2.7V to 3.6V + External Vpp, 
+  *                                  the operation will be done by double word (64-bit)
+  *       
+  * @retval FLASH Status: The returned value can be: FLASH_BUSY, FLASH_ERROR_PROGRAM,
+  *                       FLASH_ERROR_WRP, FLASH_ERROR_OPERATION or FLASH_COMPLETE.
+  */
+  FLASH_EraseSector(FLASH_Sector_11, VoltageRange_3);
+
+  for(i=0; i<MAZE_SIZE; i++)
+    for(j=0; j<MAZE_SIZE; j++)
+      FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
+			
+			
+	FLASH_ProgramHalfWord(LEFT_WALL_DISTANCE_ADRESS, LEFT_WALL_DISTANCE);
+  FLASH_ProgramHalfWord(RIGHT_WALL_DISTANCE_ADRESS, RIGHT_WALL_DISTANCE);
+  FLASH_ProgramHalfWord(FRONT_LEFT_WALL_DISTANCE_ADRESS, FRONT_LEFT_WALL_DISTANCE);
+  FLASH_ProgramHalfWord(FRONT_RIGHT_WALL_DISTANCE_ADRESS,FRONT_RIGHT_WALL_DISTANCE);
+
+  FLASH_Lock();
+}
+
+
+void Controller_readMazeFlash(void){
+  u32 i, j;
+  for(i=0; i<MAZE_SIZE; i++)
+    for(j=0; j<MAZE_SIZE; j++)
+      maze_array_global[i][j] = *(int16_t *)(MAZE_ADRESS + (i*MAZE_SIZE+j)*4);
+}
+
+void Controller_readSensorFlash(void){
+  LEFT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
+  RIGHT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
+  FRONT_RIGHT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
+  FRONT_LEFT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
+}
+
+
+
+
+
 byte Controller_check_walls(){
 	// Return value
 	byte ret_val = 0;
@@ -192,6 +261,9 @@ byte Controller_check_walls(){
 	// Rotate the last 4 bits according to current direction before return
 	//((ret_val&0x0F)>>(4-current_direction_global))|(ret_val<<current_direction_global);
 }
+
+
+
 
 
 /*
@@ -341,6 +413,8 @@ void Controller_maze_calibrate(){
 	
 	// Done 
 	// TODO: Write to Flash
+	Controller_writeFlash();
+	Controller_readSensorFlash();
 	
 }
 
@@ -374,7 +448,9 @@ byte Controller_check_front_wall(void){
 	return ((FLSensor > FL_THRESHOLD)&&(FRSensor > FR_THRESHOLD));
 }
 
-
+/*
+ * This function using the 2 front sensor to make correction
+ */
 void Controller_frontwall_corecttion(){
 
 	int left_err;
@@ -397,67 +473,6 @@ void Controller_frontwall_corecttion(){
 	
 		setLeftSpeed(0);
 		setRightSpeed(0);
-			
-}
-
-
-void Controller_writeFlash(void){
-  int i, j;
-
-  setLeftSpeed(0);
-  setRightSpeed(0);
-  FLASH_Unlock();
-	
-
-  FLASH_ClearFlag( FLASH_FLAG_EOP|FLASH_FLAG_WRPERR|FLASH_FLAG_PGAERR|FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
-/**
-  * @brief  Erases a specified FLASH Sector.
-  *   
-  * @param  FLASH_Sector: The Sector number to be erased.
-  *          This parameter can be a value between FLASH_Sector_0 and FLASH_Sector_11
-  *    
-  * @param  VoltageRange: The device voltage range which defines the erase parallelism.  
-  *          This parameter can be one of the following values:
-  *            @arg VoltageRange_1: when the device voltage range is 1.8V to 2.1V, 
-  *                                  the operation will be done by byte (8-bit) 
-  *            @arg VoltageRange_2: when the device voltage range is 2.1V to 2.7V,
-  *                                  the operation will be done by half word (16-bit)
-  *            @arg VoltageRange_3: when the device voltage range is 2.7V to 3.6V,
-  *                                  the operation will be done by word (32-bit)
-  *            @arg VoltageRange_4: when the device voltage range is 2.7V to 3.6V + External Vpp, 
-  *                                  the operation will be done by double word (64-bit)
-  *       
-  * @retval FLASH Status: The returned value can be: FLASH_BUSY, FLASH_ERROR_PROGRAM,
-  *                       FLASH_ERROR_WRP, FLASH_ERROR_OPERATION or FLASH_COMPLETE.
-  */
-  FLASH_EraseSector(FLASH_Sector_11, VoltageRange_3);
-
-  for(i=0; i<MAZE_SIZE; i++)
-    for(j=0; j<MAZE_SIZE; j++)
-      FLASH_ProgramHalfWord((MAZE_ADRESS + (i*MAZE_SIZE+j)*4),maze_array_global[i][j]);
-			
-			
-	FLASH_ProgramHalfWord(LEFT_WALL_DISTANCE_ADRESS, LEFT_WALL_DISTANCE);
-  FLASH_ProgramHalfWord(RIGHT_WALL_DISTANCE_ADRESS, RIGHT_WALL_DISTANCE);
-  FLASH_ProgramHalfWord(FRONT_LEFT_WALL_DISTANCE_ADRESS, FRONT_LEFT_WALL_DISTANCE);
-  FLASH_ProgramHalfWord(FRONT_RIGHT_WALL_DISTANCE_ADRESS,FRONT_RIGHT_WALL_DISTANCE);
-
-  FLASH_Lock();
-}
-
-
-void Controller_readMazeFlash(void){
-  u32 i, j;
-  for(i=0; i<MAZE_SIZE; i++)
-    for(j=0; j<MAZE_SIZE; j++)
-      maze_array_global[i][j] = *(int16_t *)(MAZE_ADRESS + (i*MAZE_SIZE+j)*4);
-}
-
-void Controller_readSensorFlash(void){
-  LEFT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
-  RIGHT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
-  FRONT_RIGHT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
-  FRONT_LEFT_WALL_DISTANCE = *(int16_t *)(FRONT_LEFT_WALL_DISTANCE_ADRESS);
 }
 
 
@@ -466,8 +481,78 @@ void systick() {
 }
 
 void button1_interrupt() {
+	LED2_ON;
 }
 
 
 void button2_interrupt() {
+	int encode_val, exit;
+	int count = 1;
+
+
+
+	setLeftSpeed(0);
+	setRightSpeed(0);
+	resetRightEncCount();
+	resetLeftEncCount();
+	
+	PID_EN = DISABLE;
+
+	
+	while (exit != 100000){
+		
+		encode_val = getRightEncCount();	
+		exit = getLeftEncCount();
+
+		
+		// This determine to exit the loop
+		count = 0;
+		while (exit > 2000){
+			exit = getLeftEncCount();
+			ALL_LED_ON;
+			delay_ms(300);
+			ALL_LED_OFF;
+			delay_ms(300);
+			count ++;
+			if (count  == 10){
+				exit = 100000;
+				break;
+			}	
+		}
+		
+		if (encode_val < 3001){
+			MODE = MODE_EXPLORE;
+			ALL_LED_OFF;
+			LED1_ON;
+		} else if ((encode_val > 3000)&&(encode_val < 5001)){
+			MODE = MODE_SPEED_RUN;
+			ALL_LED_OFF;
+			LED2_ON;
+		} else if ((encode_val > 5000)&&(encode_val < 7001)){
+			MODE = MODE_2;
+			ALL_LED_OFF;
+			LED3_ON;
+		} else if ((encode_val > 7000)&&(encode_val < 9001)){
+			MODE = MODE_3;
+			ALL_LED_OFF;
+			LED4_ON;
+		}else if ((encode_val > 9000)&&(encode_val < 11001)){
+			MODE = MODE_4;
+			ALL_LED_OFF;
+			LED5_ON;
+		}else if ((encode_val > 11000)&&(encode_val < 13001)){
+			MODE = MODE_CALIBRATE;
+			ALL_LED_OFF;
+			LED6_ON;
+		}else{
+			MODE = MODE_DEFAULT;		
+			ALL_LED_OFF;
+		}
+	}
+	resetRightEncCount();
+	resetLeftEncCount();	
+	setLeftSpeed(0);
+	setRightSpeed(0);
+
+	PID_EN = ENABLE;
 }
