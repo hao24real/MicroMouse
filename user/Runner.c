@@ -13,14 +13,14 @@
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
  
-#define TURN_LEFT_ANGLE 87
-#define TURN_RIGHT_ANGLE 87
+#define TURN_LEFT_ANGLE 85
+#define TURN_RIGHT_ANGLE 85
 #define FIRST_RUN 1
 #define SECOND_RUN 2
 #define THIRD_RUN 3
 #define RETURN_RUN 5
 #define GOOD_PATH (MAZE_SIZE*MAZE_SIZE - 5)
-#define HALF_CELL 90
+#define HALF_CELL 88
 #define TURN_SPEED 30
 
 #define ROW_DEST MAZE_SIZE - 1
@@ -582,7 +582,7 @@ void Runner_run(int speed){
 
 		Driver_go_straight(90, speed);
 
-		for(path_count = 0; path_count < sorted_path_index - 1; path_count ++){
+		for(path_count = 0; path_count < sorted_path_index ; path_count ++){
 
 			switch(sorted_path_array[path_count][0]){
 				case FRONT:
@@ -593,13 +593,13 @@ void Runner_run(int speed){
 					if(sorted_path_array[path_count][1] == 1)
 						Driver_turn_right(90, 90, speed);
 					else if(sorted_path_array[path_count][1] & 1){
+						Driver_go_straight(0,0);
 						Driver_turn_right(0, 45, speed);
 						Driver_go_straight(1414 * sorted_path_array[path_count][1] * 90 / 1000, speed);
-						
-						
 						Driver_turn_right(0, 45, speed);
 					}
 					else {
+						Driver_go_straight(0,0);
 						Driver_turn_right(0, 45, speed);
 						Driver_go_straight(1414 * sorted_path_array[path_count][1] * 90 / 1000, speed);
 						Driver_turn_left(0, 45, speed);
@@ -610,11 +610,13 @@ void Runner_run(int speed){
 					if(sorted_path_array[path_count][1] == 1)
 						Driver_turn_left(90, 90, speed);
 					else if(sorted_path_array[path_count][1] & 1){
+						Driver_go_straight(0,0);
 						Driver_turn_left(0, 45, speed);
 						Driver_go_straight(1414 * sorted_path_array[path_count][1] * 90 / 1000, speed);
 						Driver_turn_left(0, 45, speed);
 					}
 					else {
+						Driver_go_straight(0,0);
 						Driver_turn_left(0, 45, speed);
 						Driver_go_straight(1414 * sorted_path_array[path_count][1] * 90 / 1000, 0);
 						Driver_turn_right(0, 45, speed);

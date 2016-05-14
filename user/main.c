@@ -54,12 +54,12 @@ int main(void) {
 			case MODE_EXPLORE:
 																
 																LED1_ON;
-																Runner_explore(90);
+																Runner_explore(80);
 																MODE = MODE_SPEED_RUN;
 																break;
 			case MODE_SPEED_RUN:
 																
-																Runner_run(110);
+																Runner_run(100);
 																LED2_ON;
 																MODE = MODE_DEFAULT;
 																
