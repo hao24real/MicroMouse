@@ -110,7 +110,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 		if (left_speed == right_speed){
 			
 			// check wall infomation
-			readSensor();;
+			readSensor();
 				// CASE 1: correct position base on both wall
 				// For reliable sensor to correct position. we need to read the cloe value only
 			if ((DLSensor > (LEFT_WALL_DISTANCE-50))&&(DRSensor > (RIGHT_WALL_DISTANCE-50))){
@@ -127,7 +127,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				
 				// CASE 2: have left wall
 			} else	if (DLSensor > (LEFT_WALL_DISTANCE-50)){
-				if (temp_cnt >200){				
+				if (temp_cnt >200){	
 					ERR = (DLSensor - LEFT_WALL_DISTANCE)/22;
 					// Check if error is valid for correction ( too far from wall)
 					if (ERR < -VALID_ERR){
@@ -273,9 +273,6 @@ byte Controller_check_walls(){
 	// Rotate the last 4 bits according to current direction before return
 	//((ret_val&0x0F)>>(4-current_direction_global))|(ret_val<<current_direction_global);
 }
-
-
-
 
 
 /*
