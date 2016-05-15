@@ -489,14 +489,16 @@ void button2_interrupt() {
 	int encode_val, exit;
 	int count = 1;
 
-
-
 	setLeftSpeed(0);
 	setRightSpeed(0);
-	resetRightEncCount();
-	resetLeftEncCount();
 	
-	PID_EN = DISABLE;
+	PID_EN = PID_DISABLE;
+	
+	setLeftEncCount(0);
+	setRightEncCount(0);
+	
+	
+
 
 	
 	while (exit != 100000){
@@ -549,10 +551,11 @@ void button2_interrupt() {
 			ALL_LED_OFF;
 		}
 	}
-	resetRightEncCount();
-	resetLeftEncCount();	
-	setLeftSpeed(0);
-	setRightSpeed(0);
-
-	PID_EN = ENABLE;
+	
+	setLeftEncCount(0);
+	setRightEncCount(0);
+	
+	delay_ms(100);
+	
+	PID_EN = PID_ENABLE;
 }
