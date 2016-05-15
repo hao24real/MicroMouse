@@ -53,19 +53,19 @@ int main(void) {
 		
 			case MODE_EXPLORE:
 																Runner_explore(60);
-																MODE = MODE_SPEED_RUN;
+																MODE = MODE_2;
 																LED1_ON;
 																break;
 			case MODE_SPEED_RUN:
 																Runner_explore(60);
-																MODE = MODE_SPEED_RUN;
-																LED2_on;
+																MODE = MODE_2;
+																LED2_ON;
 																break;
 			case MODE_2:
 																Runner_run(180);
 																MODE = MODE_DEFAULT;
 																LED1_ON;
-																LED2_on
+																LED2_ON;
 																break;
 			case MODE_3:							
 																//Driver_check_walls();

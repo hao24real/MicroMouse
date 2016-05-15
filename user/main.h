@@ -53,7 +53,7 @@
 #define MODE_3 3
 #define MODE_4 4
 #define MODE_5 5
-#define MODE_CALIBRATE 5
+#define MODE_CALIBRATE 6
 #define MODE_DEFAULT 7
 
 
