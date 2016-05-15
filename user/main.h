@@ -64,7 +64,7 @@ extern byte current_direction_global;
 extern byte current_position_global[2];
 //bit indicate wall info and visited
 extern byte maze_array_global[MAZE_SIZE][MAZE_SIZE];
-
+extern int sorted_path_array[MAZE_SIZE*MAZE_SIZE][2];
 
 //path in there
 extern byte path_1_global[MAZE_SIZE*MAZE_SIZE];
