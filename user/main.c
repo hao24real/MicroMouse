@@ -57,7 +57,7 @@ int main(void) {
 																LED1_ON;
 																break;
 			case MODE_SPEED_RUN:
-																Runner_run(120);
+																Runner_run(140);
 																MODE = MODE_DEFAULT;
 																LED2_ON;
 																break;

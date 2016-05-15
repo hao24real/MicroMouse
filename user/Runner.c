@@ -20,7 +20,7 @@
 #define THIRD_RUN 3
 #define RETURN_RUN 5
 #define GOOD_PATH (MAZE_SIZE*MAZE_SIZE - 5)
-#define HALF_CELL 88
+#define HALF_CELL 87
 
 #define ROW_DEST 7
 #define COLUMN_DEST 7
@@ -566,7 +566,7 @@ void Runner_explore(int speed ){
 void Runner_run(int speed){
 
 		int path_count;
-	
+		int i;
 	  //path index is the size of the path_run_array
 	
 		Driver_go_straight(0,0);
@@ -587,40 +587,20 @@ void Runner_run(int speed){
 					printf("Go straight: %d\n", 180 * sorted_path_array[path_count][1]);
 					break;
 				case RIGHT:
-					if(sorted_path_array[path_count][1] == 1)
-						Driver_turn_right(90, 90, speed);
-					else if(sorted_path_array[path_count][1] & 1){
-						Driver_go_straight(0,0);
-						delay_ms(200);
-						Driver_turn_right(0, 45, speed);
-						Driver_go_straight(1414 * sorted_path_array[path_count][1] * 90 / 1000, speed);
-						Driver_turn_right(0, 4, speed);
-					}
-					else {
-						Driver_go_straight(0,0);
-						delay_ms(200);
-						Driver_turn_right(0, 45, speed);
-						Driver_go_straight(1414 * sorted_path_array[path_count][1] * 90 / 1000, speed);
-						Driver_turn_left(0, 45, speed);
+					for(i = 0; i < sorted_path_array[path_count][1]; i++){
+						if((i&1) == 0)
+							Driver_turn_right(90, 90, speed);
+						else
+							Driver_turn_left(90,90,speed);
 					}
 
 					break;
 				case LEFT:
-					if(sorted_path_array[path_count][1] == 1)
-						Driver_turn_left(90, 90, speed);
-					else if(sorted_path_array[path_count][1] & 1){
-						Driver_go_straight(0,0);
-						delay_ms(200);
-						Driver_turn_left(0, 45, speed);
-						Driver_go_straight(1414 * sorted_path_array[path_count][1] * 90 / 1000, speed);
-						Driver_turn_left(0, 45, speed);
-					}
-					else {
-						Driver_go_straight(0,0);
-						delay_ms(200);
-						Driver_turn_left(0, 45, speed);
-						Driver_go_straight(1414 * sorted_path_array[path_count][1] * 90 / 1000, 0);
-						Driver_turn_right(0, 45, speed);
+					for(i = 0; i < sorted_path_array[path_count][1]; i++){
+						if((i&1)==0)
+							Driver_turn_left(90, 90, speed);
+						else
+							Driver_turn_right(90,90,speed);
 					}
 					break;
 			}
@@ -628,40 +608,4 @@ void Runner_run(int speed){
 		Driver_go_straight(90, speed);
 		Driver_go_straight(0, 0);
 }
-
-
-
-// void Runner_run_onpost(int speed){
-
-// 		int path_count;
-	
-// 	  //path index is the size of the path_run_array
-// 		for(path_count = 0; path_count < path_index; path_count ++){
-// 			switch(path_run_global[path_count]){
-// 				case FRONT:
-// 					if(path_run_global[path_count+1] == RIGHT){
-// 						Driver_turn_right_onpost(90, speed);
-// 						Driver_go_straight(HALF_CELL, speed);
-// 						path_count ++;
-// 					}
-// 					else if(path_run_global[path_count+1] == LEFT){
-// 						Driver_turn_left_onpost(90, speed);
-// 						Driver_go_straight(HALF_CELL, speed);
-// 						path_count++;
-// 					}
-// 					else
-// 						Driver_go_straight(180, speed);
-// 					break;
-// 				case RIGHT:
-// 					Driver_turn_right(0, 90, speed);
-// 					Driver_go_straight(180, speed);
-// 					break;
-// 				case LEFT:
-// 					Driver_turn_left(0, 90, speed);
-// 					Driver_go_straight(180, speed);
-// 					break;
-// 			}
-// 		}
-// 		Driver_go_straight(0, 0);
-// }
 
