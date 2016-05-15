@@ -59,7 +59,7 @@ int main(void) {
 			case MODE_SPEED_RUN:
 																Runner_explore(60);
 																MODE = MODE_SPEED_RUN;
-																LED2_on
+																LED2_on;
 																break;
 			case MODE_2:
 																Runner_run(180);
