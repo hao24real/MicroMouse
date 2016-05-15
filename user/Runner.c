@@ -12,7 +12,7 @@
  * Wall is 12mm thick
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
-#define TURN_SPEED 70
+#define TURN_SPEED 60
 #define TURN_LEFT_ANGLE 90
 #define TURN_RIGHT_ANGLE 90
 #define FIRST_RUN 1
