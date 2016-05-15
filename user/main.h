@@ -48,10 +48,11 @@
 
 
 #define MODE_EXPLORE 0
-#define MODE_EXPLORE_PIVOT 1
-#define MODE_SPEED_RUN 2
-#define MODE_4 3
-#define MODE_5 4
+#define MODE_SPEED_RUN 1
+#define MODE_2 2
+#define MODE_3 3
+#define MODE_4 4
+#define MODE_5 5
 #define MODE_CALIBRATE 5
 #define MODE_DEFAULT 7
 
