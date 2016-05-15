@@ -406,7 +406,18 @@ void Runner_explore(int speed ){
 				if(MODE == MODE_EXPLORE)
 					Driver_turn_right(HALF_CELL,TURN_RIGHT_ANGLE, TURN_SPEED);
 				else{
-					
+					Driver_go_straight(HALF_CELL, speed);
+					// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
+					if (READ_B(walls_FLBR, FRONT))
+							Driver_frontwall_correction();
+					else{
+						Driver_go_straight(0,0);
+					}
+					delay_ms(400);
+					Driver_turn_right(0,TURN_RIGHT_ANGLE, TURN_SPEED);
+					Driver_go_straight(0,0);
+					delay_ms(200);
+					Driver_go_straight(HALF_CELL, speed);
 				}
 
 
@@ -415,7 +426,23 @@ void Runner_explore(int speed ){
 			// Case 3: Next position is at the left	
 			} else if (next_position == LEFT_DIRECT(current_direction_global)){
 				
-				Driver_turn_left(HALF_CELL, TURN_LEFT_ANGLE, TURN_SPEED);
+				if(MODE == MODE_EXPLORE)
+					Driver_turn_left(HALF_CELL, TURN_LEFT_ANGLE, TURN_SPEED);
+				else{
+					Driver_go_straight(HALF_CELL, speed);
+					// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
+					if (READ_B(walls_FLBR, FRONT))
+						Driver_frontwall_correction();
+					else{
+						Driver_go_straight(0,0);
+					}
+					delay_ms(400);
+					
+					Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
+					Driver_go_straight(0,0);
+					delay_ms(200);
+					Driver_go_straight(HALF_CELL, speed);
+				}
 	
 				current_direction_global = next_position;
 		
