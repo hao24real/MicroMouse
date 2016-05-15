@@ -52,4 +52,5 @@
 ..\obj\stm32f4xx_it.o: ..\user_Libraries\inc\pwm.h
 ..\obj\stm32f4xx_it.o: ..\user_Libraries\inc\encoder.h
 ..\obj\stm32f4xx_it.o: ..\user_Libraries\inc\sensor_Function.h
+..\obj\stm32f4xx_it.o: ..\user\Controller.h
 ..\obj\stm32f4xx_it.o: ..\user_Libraries\inc\adc.h

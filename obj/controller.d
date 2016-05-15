@@ -50,6 +50,7 @@
 ..\obj\controller.o: ..\user_Libraries\inc\pwm.h
 ..\obj\controller.o: ..\user_Libraries\inc\encoder.h
 ..\obj\controller.o: ..\user_Libraries\inc\sensor_Function.h
+..\obj\controller.o: ..\user\Controller.h
 ..\obj\controller.o: ..\user_Libraries\inc\buzzer.h
 ..\obj\controller.o: ..\user\main.h
 ..\obj\controller.o: ..\user_Libraries\inc\adc.h

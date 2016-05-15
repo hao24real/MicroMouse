@@ -42,3 +42,15 @@
 ..\obj\pwm.o: ..\ST_Libraries\inc\misc.h
 ..\obj\pwm.o: ..\user_Libraries\inc\delay.h
 ..\obj\pwm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+..\obj\pwm.o: ..\user\Controller.h
+..\obj\pwm.o: ..\user\stm32f4xx_it.h
+..\obj\pwm.o: ..\user_Libraries\inc\led.h
+..\obj\pwm.o: ..\user_Libraries\inc\button.h
+..\obj\pwm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\pwm.o: ..\user_Libraries\inc\usart.h
+..\obj\pwm.o: ..\user_Libraries\inc\SPI.h
+..\obj\pwm.o: ..\user_Libraries\inc\matrixDisplay.h
+..\obj\pwm.o: ..\user_Libraries\inc\buzzer.h
+..\obj\pwm.o: ..\user\main.h
+..\obj\pwm.o: ..\user_Libraries\inc\adc.h
+..\obj\pwm.o: ..\user_Libraries\inc\pid.h

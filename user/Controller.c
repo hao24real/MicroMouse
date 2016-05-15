@@ -498,9 +498,6 @@ void button2_interrupt() {
 	setRightEncCount(0);
 	
 	
-
-
-	
 	while (exit != 100000){
 		
 		encode_val = getRightEncCount();	

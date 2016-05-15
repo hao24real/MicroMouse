@@ -178,18 +178,12 @@ void EXTI9_5_IRQHandler(void) {
 	
   //__disable_irq();
 	if(EXTI_GetITStatus(EXTI_Line5) != RESET) {
-<<<<<<< HEAD
-=======
-		
-    
->>>>>>> 8afa2d48095f7bb6b7e73e4a8dc31fa4eea59aec
     //debounce the button
 	  delay_ms(200);
 		
 		button1_interrupt();
 		
 		EXTI_ClearITPendingBit(EXTI_Line5);
-		__enable_irq();
 	}
 	
 	else	if(EXTI_GetITStatus(EXTI_Line8) != RESET) 
@@ -200,15 +194,9 @@ void EXTI9_5_IRQHandler(void) {
 		button2_interrupt();
 		
 		EXTI_ClearITPendingBit(EXTI_Line8);
-		__enable_irq();
 		
 	}
 
-<<<<<<< HEAD
-=======
-  //__enable_irq();
-
->>>>>>> 8afa2d48095f7bb6b7e73e4a8dc31fa4eea59aec
 }
 
 

@@ -35,8 +35,8 @@ void Encoder_Configration(void)
 	TIM_Cmd(TIM2, ENABLE);	
 	
 	// Reset both register
-	resetLeftEncCount();
-	resetRightEncCount();
+	setLeftEncCount(0);
+	setRightEncCount(0);
 }
 
 int32_t getRightEncCount(void) {
@@ -44,8 +44,8 @@ int32_t getRightEncCount(void) {
 	return -(TIM5->CNT);
 }
 
-void resetRightEncCount(void) {
-	TIM5->CNT = 0;
+void setRightEncCount(int speed) {
+	TIM5->CNT = speed;
 }
 
 int32_t getLeftEncCount(void) {
@@ -53,7 +53,7 @@ int32_t getLeftEncCount(void) {
 	return -(TIM2->CNT);
 }
 
-void resetLeftEncCount(void) {
-	TIM2->CNT = 0;
+void setLeftEncCount(int speed) {
+	TIM2->CNT = speed;
 }
 

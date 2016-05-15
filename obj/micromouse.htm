@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\obj\micromouse.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\obj\micromouse.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sun May 15 05:10:58 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Sun May 15 05:32:51 2016
 <BR><P>
 <H3>Maximum Stack Usage =        320 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1227,7 +1227,7 @@ Global Symbols
 <P><STRONG><a name="[c]"></a>PendSV_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f4xx_it.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f4xx.o(RESET)
 </UL>
-<P><STRONG><a name="[d]"></a>SysTick_Handler</STRONG> (Thumb, 40 bytes, Stack size 8 bytes, stm32f4xx_it.o(.text))
+<P><STRONG><a name="[d]"></a>SysTick_Handler</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, stm32f4xx_it.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = SysTick_Handler &rArr; pid_motor_speed
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;systick
@@ -1361,16 +1361,16 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EXTI9_5_IRQHandler
 </UL>
 
-<P><STRONG><a name="[c0]"></a>button2_interrupt</STRONG> (Thumb, 888 bytes, Stack size 16 bytes, controller.o(.text))
+<P><STRONG><a name="[c0]"></a>button2_interrupt</STRONG> (Thumb, 886 bytes, Stack size 16 bytes, controller.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = button2_interrupt &rArr; setRightSpeed
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
 <LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setRightSpeed
+<LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setRightEncCount
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setLeftSpeed
-<LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;resetRightEncCount
-<LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;resetLeftEncCount
+<LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setLeftEncCount
 <LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getRightEncCount
 <LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getLeftEncCount
 </UL>
@@ -1777,17 +1777,17 @@ Global Symbols
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;button2_interrupt
 </UL>
 
-<P><STRONG><a name="[db]"></a>resetRightEncCount</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, encoder.o(.text))
+<P><STRONG><a name="[dc]"></a>setRightEncCount</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, encoder.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Encoder_Configration
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;button2_interrupt
 </UL>
 
-<P><STRONG><a name="[dc]"></a>resetLeftEncCount</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, encoder.o(.text))
+<P><STRONG><a name="[db]"></a>setLeftEncCount</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, encoder.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Encoder_Configration
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;button2_interrupt
 </UL>
 
-<P><STRONG><a name="[c6]"></a>Encoder_Configration</STRONG> (Thumb, 166 bytes, Stack size 16 bytes, encoder.o(.text))
+<P><STRONG><a name="[c6]"></a>Encoder_Configration</STRONG> (Thumb, 170 bytes, Stack size 16 bytes, encoder.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = Encoder_Configration &rArr; TIM_EncoderInterfaceConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_EncoderInterfaceConfig
@@ -1796,8 +1796,8 @@ Global Symbols
 <LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_APB1PeriphClockCmd
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_PinAFConfig
 <LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
-<LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;resetRightEncCount
-<LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;resetLeftEncCount
+<LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setRightEncCount
+<LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setLeftEncCount
 </UL>
 <BR>[Called By]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Controller_hardware_init
 </UL>
@@ -1879,7 +1879,7 @@ Global Symbols
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setLeftPwm
 </UL>
 
-<P><STRONG><a name="[bb]"></a>pid_motor_speed</STRONG> (Thumb, 256 bytes, Stack size 24 bytes, pid.o(.text))
+<P><STRONG><a name="[bb]"></a>pid_motor_speed</STRONG> (Thumb, 298 bytes, Stack size 24 bytes, pid.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = pid_motor_speed
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setRightPwm

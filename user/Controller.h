@@ -20,15 +20,14 @@
 #include "pid.h"
 
 
-#define ENABLE 1
-#define DISABLE 0
 
 
 #define FL_THRESHOLD 200
 #define FR_THRESHOLD 210
 #define DL_THRESHOLD 250
 #define DR_THRESHOLD 190
-
+#define PID_ENABLE 1
+#define PID_DISABLE 0
 
 
 extern byte PID_EN;

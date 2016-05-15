@@ -43,6 +43,14 @@
 ..\obj\sensor_function.o: ..\user_Libraries\inc\pid.h
 ..\obj\sensor_function.o: ..\user_Libraries\inc\pwm.h
 ..\obj\sensor_function.o: ..\user_Libraries\inc\encoder.h
-..\obj\sensor_function.o: ..\user_Libraries\inc\matrixDisplay.h
+..\obj\sensor_function.o: ..\user\Controller.h
+..\obj\sensor_function.o: ..\user\stm32f4xx_it.h
 ..\obj\sensor_function.o: ..\user_Libraries\inc\led.h
+..\obj\sensor_function.o: ..\user_Libraries\inc\button.h
 ..\obj\sensor_function.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\sensor_function.o: ..\user_Libraries\inc\usart.h
+..\obj\sensor_function.o: ..\user_Libraries\inc\SPI.h
+..\obj\sensor_function.o: ..\user_Libraries\inc\matrixDisplay.h
+..\obj\sensor_function.o: ..\user_Libraries\inc\buzzer.h
+..\obj\sensor_function.o: ..\user\main.h
+..\obj\sensor_function.o: ..\user_Libraries\inc\pid.h

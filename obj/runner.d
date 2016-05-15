@@ -52,6 +52,7 @@
 ..\obj\runner.o: ..\user_Libraries\inc\pwm.h
 ..\obj\runner.o: ..\user_Libraries\inc\encoder.h
 ..\obj\runner.o: ..\user_Libraries\inc\sensor_Function.h
+..\obj\runner.o: ..\user\Controller.h
 ..\obj\runner.o: ..\user_Libraries\inc\buzzer.h
 ..\obj\runner.o: ..\user\main.h
 ..\obj\runner.o: ..\user_Libraries\inc\adc.h

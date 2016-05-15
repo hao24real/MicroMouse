@@ -51,6 +51,7 @@
 ..\obj\driver.o: ..\user_Libraries\inc\pwm.h
 ..\obj\driver.o: ..\user_Libraries\inc\encoder.h
 ..\obj\driver.o: ..\user_Libraries\inc\sensor_Function.h
+..\obj\driver.o: ..\user\Controller.h
 ..\obj\driver.o: ..\user_Libraries\inc\buzzer.h
 ..\obj\driver.o: ..\user\main.h
 ..\obj\driver.o: ..\user_Libraries\inc\adc.h
