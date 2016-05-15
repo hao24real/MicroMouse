@@ -52,28 +52,60 @@ int main(void) {
 		switch (MODE){
 		
 			case MODE_EXPLORE:
-																Runner_explore(60);
+																Runner_explore(80);
 																MODE = MODE_SPEED_RUN;
 																LED1_ON;
 																break;
 			case MODE_SPEED_RUN:
-																Runner_run(80);
+																Runner_run(100);
 																MODE = MODE_DEFAULT;
 																LED2_ON;
 																break;
 			case MODE_2:							
-																Driver_check_walls();
-																printf("FLSensor: %d\n", FLSensor);
-																printf("FRSensor: %d\n\n", FRSensor);
+																//Driver_check_walls();
+																//printf("<FLSensor: %d, FRSensor: %d>", FLSensor, FRSensor);
+																//printf("%d\n", FLSensor);
+																//delay_ms(500);
+																//printf("%d", FRSensor);
+																Driver_turn_left(0, 90, 30);
+																Driver_go_straight(0,0);
+																delay_ms(500);
+																Driver_turn_left(0, 90, 30);
+																Driver_go_straight(0,0);
+																delay_ms(500);
+																Driver_turn_left(0, 90, 30);
+																Driver_go_straight(0,0);
+																delay_ms(500);
+																Driver_turn_left(0, 90, 30);
+																Driver_go_straight(0,0);
+																delay_ms(500);
 																LED3_ON;
+																MODE = MODE_DEFAULT;
 																break;
 			case MODE_3:
 					//Runner_run_onpost(80);
-																LED4_ON;												
+																Driver_go_straight(720, 20);
+																Driver_go_straight(0,0);
+																LED4_ON;	
+																MODE = MODE_DEFAULT;
 																break;
 			case MODE_4:
 				//Runner_run_onpost(80);
+																Driver_turn_right(0, 90, 30);
+																Driver_go_straight(0,0);
+																delay_ms(500);
+																Driver_turn_right(0, 90, 30);
+																Driver_go_straight(0,0);
+																delay_ms(500);
+																Driver_turn_right(0, 90, 30);
+																Driver_go_straight(0,0);
+																delay_ms(500);
+																Driver_turn_right(0, 90, 30);
+																Driver_go_straight(0,0);
+																delay_ms(500);
+																		
 																LED5_ON;
+																MODE = MODE_DEFAULT;
 																break;
 			case MODE_CALIBRATE:
 																Controller_maze_calibrate();

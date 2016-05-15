@@ -24,10 +24,10 @@
 #define DISABLE 0
 
 
-#define FL_THRESHOLD 250
-#define FR_THRESHOLD 350
+#define FL_THRESHOLD 220
+#define FR_THRESHOLD 300
 #define DL_THRESHOLD 350
-#define DR_THRESHOLD 300
+#define DR_THRESHOLD 320
 
 
 

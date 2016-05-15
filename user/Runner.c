@@ -12,17 +12,17 @@
  * Wall is 12mm thick
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
- 
+#define TURN_SPEED 35
 #define TURN_LEFT_ANGLE 90
-#define TURN_RIGHT_ANGLE 88
+#define TURN_RIGHT_ANGLE 90
 #define FIRST_RUN 1
 #define SECOND_RUN 2
 #define THIRD_RUN 3
 #define RETURN_RUN 5
 #define GOOD_PATH (MAZE_SIZE*MAZE_SIZE - 5)
 
-#define ROW_DEST MAZE_SIZE - 1
-#define COLUMN_DEST MAZE_SIZE - 1
+#define ROW_DEST 7
+#define COLUMN_DEST 7
 
 // Declaration off variables
 byte walls_ESWN;
@@ -56,225 +56,6 @@ void maze_initialize_max(byte row_dest, byte column_dest){
 	}
 	maze_dist_array_global[row_dest][column_dest] = 0;
 }
-
-
-/*
-void BFS_floodfill(){
-
-	//columns are for indicating the position of cell
-	byte stack_cell1[MAZE_SIZE * MAZE_SIZE][2];
-	byte stack_cell2[MAZE_SIZE * MAZE_SIZE][2]; 
-	//2 byte for row,column in each index of stack, no real stack so use array
-		
-	byte current_cell_dist;
-	
-  byte count_stack1 = 0;
-	byte count_stack2 = 0;
-	byte current_cell_row = 0;
-	byte current_cell_column = 0;
-	
-	byte current_cell = 0;
-	bool reach_origin = 0;
-
-	//originally destination cell is in there 
-	count_stack1 = 0;
-	
-	//this value should be 0 from the start
-	current_cell_dist = maze_dist_array_global[row_Dest][column_Dest];;
-	
-	//push the first destination to the stack
-	stack_cell1[count_stack1][ROW_INDEX] = row_Dest;
-	stack_cell1[count_stack1][COLUMN_INDEX] = column_Dest;
-	SET_B(maze_array_global[stack_cell1[count_stack1][ROW_INDEX]][stack_cell1[count_stack1][COLUMN_INDEX]], FLOODED);
-	
-	count_stack1 ++;
-
-	
-	//only terminate when simulation of MM reach 
-	while(!reach_origin){
-
-		current_cell_dist++;
-		
-		while(count_stack1 != 0 && !reach_origin){
-			
-			//assigng to cell's position base from the stack
-			current_cell_row = stack_cell1[count_stack1 - 1][ROW_INDEX];
-			current_cell_column = stack_cell1[count_stack1 - 1][COLUMN_INDEX];
-			current_cell = maze_array_global[current_cell_row][current_cell_column];
-
-
-			//check north wall
-			//then check visited and not flooded
-			if(!READ_B(current_cell, NORTH)){
-				if(!READ_B(maze_array_global[current_cell_row - 1][current_cell_column], FLOODED)
-					&& READ_B(maze_array_global[current_cell_row - 1][current_cell_column], VISITED)) {
-
-					//push to stack 2
-					stack_cell2[count_stack2][ROW_INDEX] = current_cell_row - 1;
-					stack_cell2[count_stack2][COLUMN_INDEX] = current_cell_column;
-					count_stack2++;
-
-					//set it to be incremented number
-					maze_dist_array_global[current_cell_row - 1][current_cell_column] = current_cell_dist;
-					SET_B(maze_array_global[current_cell_row-1][current_cell_column], FLOODED);
-
-
-					if((current_cell_row - 1 == 0)&& (current_cell_column == 0))
-						reach_origin = 1;
-				}
-			}
-			
-			if(!READ_B(current_cell, EAST)){
-				if(!READ_B(maze_array_global[current_cell_row][current_cell_column+1], FLOODED)
-					&& READ_B(maze_array_global[current_cell_row][current_cell_column+1], VISITED)) {
-
-					//push to stack 2
-					stack_cell2[count_stack2][ROW_INDEX] = current_cell_row;
-					stack_cell2[count_stack2][COLUMN_INDEX] = current_cell_column + 1;
-					count_stack2++;
-
-					//set it to be incremented number
-					maze_dist_array_global[current_cell_row][current_cell_column +1] = current_cell_dist;
-					SET_B(maze_array_global[current_cell_row ][current_cell_column + 1], FLOODED);
-
-
-					if((current_cell_row == 0)&& (current_cell_column+1 == 0))
-						reach_origin = 1;
-				}
-			}
-				
-			if(!READ_B(current_cell, SOUTH)){
-				if(!READ_B(maze_array_global[current_cell_row+1][current_cell_column], FLOODED)
-					&& READ_B(maze_array_global[current_cell_row+1][current_cell_column], VISITED)) {
-
-					//push to stack 2
-					stack_cell2[count_stack2][ROW_INDEX] = current_cell_row + 1;
-					stack_cell2[count_stack2][COLUMN_INDEX] = current_cell_column;
-					count_stack2++;
-
-					//set it to be incremented number
-					maze_dist_array_global[current_cell_row+ 1][current_cell_column] = current_cell_dist;
-					SET_B(maze_array_global[current_cell_row + 1][current_cell_column], FLOODED);
-	
-					if((current_cell_row+1 == 0)&& (current_cell_column == 0))
-						reach_origin = 1;
-				}
-			}
-				
-			if(!READ_B(current_cell, WEST)){
-				if(!READ_B(maze_array_global[current_cell_row][current_cell_column-1], FLOODED)
-					&& READ_B(maze_array_global[current_cell_row][current_cell_column-1], VISITED)) {
-
-					//push to stack 2
-					stack_cell2[count_stack2][ROW_INDEX] = current_cell_row;
-					stack_cell2[count_stack2][COLUMN_INDEX] = current_cell_column - 1;
-					count_stack2++;
-
-					//set it to be incremented number
-					maze_dist_array_global[current_cell_row][current_cell_column - 1] = current_cell_dist;
-					SET_B(maze_array_global[current_cell_row ][current_cell_column - 1], FLOODED);
-
-					if((current_cell_row == 0)&& (current_cell_column - 1 == 0))
-						reach_origin = 1;
-				}
-			}
-
-			//pop from stack 1
-			count_stack1 --;
-		}
-
-		current_cell_dist++;
-
-		while(count_stack2 != 0 && !reach_origin){
-
-			//assigng to cell's position base from the stack
-			current_cell_row = stack_cell2[count_stack2 - 1][ROW_INDEX];
-			current_cell_column = stack_cell2[count_stack2 - 1][COLUMN_INDEX];
-			current_cell = maze_array_global[current_cell_row][current_cell_column];
-
-
-			//check north wall
-			//then check visited and not flooded
-			if(!READ_B(current_cell, NORTH)){
-				if(!READ_B(maze_array_global[current_cell_row - 1][current_cell_column], FLOODED)
-					&& READ_B(maze_array_global[current_cell_row - 1][current_cell_column], VISITED)) {
-
-					//push to stack 1
-					stack_cell1[count_stack1][ROW_INDEX] = current_cell_row - 1;
-					stack_cell1[count_stack1][COLUMN_INDEX] = current_cell_column;
-					count_stack1++;
-
-					//set it to be incremented number
-					maze_dist_array_global[current_cell_row - 1][current_cell_column] = current_cell_dist;
-					SET_B(maze_array_global[current_cell_row-1][current_cell_column], FLOODED);
-
-
-					if((current_cell_row - 1 == 0)&& (current_cell_column == 0))
-						reach_origin = 1;
-				}
-			}
-			
-			if(!READ_B(current_cell, EAST)){
-				if(!READ_B(maze_array_global[current_cell_row][current_cell_column+1], FLOODED)
-					&& READ_B(maze_array_global[current_cell_row][current_cell_column+1], VISITED)) {
-
-					//push to stack 1
-					stack_cell1[count_stack1][ROW_INDEX] = current_cell_row;
-					stack_cell1[count_stack1][COLUMN_INDEX] = current_cell_column + 1;
-					count_stack1++;
-
-					//set it to be incremented number
-					maze_dist_array_global[current_cell_row][current_cell_column +1] = current_cell_dist;
-					SET_B(maze_array_global[current_cell_row ][current_cell_column + 1], FLOODED);
-
-
-					if((current_cell_row == 0)&& (current_cell_column+1 == 0))
-						reach_origin = 1;
-				}
-			}
-				
-			if(!READ_B(current_cell, SOUTH)){
-				if(!READ_B(maze_array_global[current_cell_row+1][current_cell_column], FLOODED)
-					&& READ_B(maze_array_global[current_cell_row+1][current_cell_column], VISITED)) {
-
-					//push to stack 1
-					stack_cell1[count_stack1][ROW_INDEX] = current_cell_row + 1;
-					stack_cell1[count_stack1][COLUMN_INDEX] = current_cell_column;
-					count_stack1++;
-
-					//set it to be incremented number
-					maze_dist_array_global[current_cell_row + 1][current_cell_column] = current_cell_dist;
-					SET_B(maze_array_global[current_cell_row + 1][current_cell_column], FLOODED);
-	
-					if((current_cell_row+1 == 0)&& (current_cell_column == 0))
-						reach_origin = 1;
-				}
-			}
-				
-			if(!READ_B(current_cell, WEST)){
-				if(!READ_B(maze_array_global[current_cell_row][current_cell_column-1], FLOODED)
-					&& READ_B(maze_array_global[current_cell_row][current_cell_column-1], VISITED)) {
-
-					//push to stack 1
-					stack_cell1[count_stack1][ROW_INDEX] = current_cell_row;
-					stack_cell1[count_stack1][COLUMN_INDEX] = current_cell_column - 1;
-					count_stack1++;
-
-					//set it to be incremented number
-					maze_dist_array_global[current_cell_row][current_cell_column - 1] = current_cell_dist;
-					SET_B(maze_array_global[current_cell_row ][current_cell_column - 1], FLOODED);
-
-					if((current_cell_row == 0)&& (current_cell_column - 1 == 0))
-						reach_origin = 1;
-				}
-			}
-			//pop from stack 2
-			count_stack2 --;
-		}
-		current_cell_dist++;
-	}
-}
-*/
 
 void maze_floodfill(){
 	
@@ -313,29 +94,29 @@ void maze_floodfill(){
 	
 }// end method
 
-void debug_dist(){
-	int i;
-	int j;
-	for( i = 0; i < MAZE_SIZE; i++){
-		printf("|");
-		for(j = 0; j < MAZE_SIZE; j++){
-			printf("%4d|", path_1_global[(i*6)+ j ] = maze_dist_array_global[i][j]);
-		}
-		printf("\n");
-	}
-}
+// void debug_dist(){
+// 	int i;
+// 	int j;
+// 	for( i = 0; i < MAZE_SIZE; i++){
+// 		printf("|");
+// 		for(j = 0; j < MAZE_SIZE; j++){
+// 			printf("%4d|", path_1_global[(i*6)+ j ] = maze_dist_array_global[i][j]);
+// 		}
+// 		printf("\n");
+// 	}
+// }
 
-void debug_wall(){
-	int i;
-	int j;
-	for( i = 0; i < MAZE_SIZE; i++){
-		printf("|");
-		for(j = 0; j < MAZE_SIZE; j++){
-			printf("0x%x | ", maze_array_global[i][j]);
-		}
-		printf("\n");
-	}
-}
+// void debug_wall(){
+// 	int i;
+// 	int j;
+// 	for( i = 0; i < MAZE_SIZE; i++){
+// 		printf("|");
+// 		for(j = 0; j < MAZE_SIZE; j++){
+// 			printf("0x%x | ", maze_array_global[i][j]);
+// 		}
+// 		printf("\n");
+// 	}
+// }
 
 
 
@@ -376,8 +157,8 @@ byte store_path(byte row_Dest, byte column_Dest){
 
 	SET_B(maze_array_global[row_Dest][column_Dest], VISITED);
 	
-	debug_dist();
-	debug_wall();
+	// debug_dist();
+	// debug_wall();
 
 	// b. initialize the array for turning 
 	for(index = 0; index < MAZE_SIZE * MAZE_SIZE; index++)
@@ -399,14 +180,14 @@ byte store_path(byte row_Dest, byte column_Dest){
 		
 		current_dist = maze_dist_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]];	
 		
-		printf("current distance: %d\n", current_dist);
+		// printf("current distance: %d\n", current_dist);
 		// Check EAST neighbor
 		if (!READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]], EAST)){		
 			east_neighbor_dist = maze_dist_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]+1];
 			if ((current_dist == (east_neighbor_dist + 1) )
 				&& READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX] + 1] ,VISITED)) 
 			{
-				printf("east_neighbor: %d\n", east_neighbor_dist);
+				// printf("east_neighbor: %d\n", east_neighbor_dist);
 				next_position_local = EAST;
 			}
 		}
@@ -417,7 +198,7 @@ byte store_path(byte row_Dest, byte column_Dest){
 			if ((current_dist == (north_neighbor_dist + 1)) 
 				 && READ_B(maze_array_global[current_position_local[ROW_INDEX]-1][current_position_local[COLUMN_INDEX]] ,VISITED))
 			{
-				printf("north_neighbor: %d\n", north_neighbor_dist);
+				// printf("north_neighbor: %d\n", north_neighbor_dist);
 				next_position_local = NORTH;
 			}
 		}
@@ -428,7 +209,7 @@ byte store_path(byte row_Dest, byte column_Dest){
 			if ((current_dist == (west_neighbor_dist + 1)) 
 				&& READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]-1] ,VISITED))
 			{
-				printf("west_neighbor: %d\n", west_neighbor_dist);
+				// printf("west_neighbor: %d\n", west_neighbor_dist);
 				next_position_local = WEST;
 			}
 		}
@@ -436,16 +217,16 @@ byte store_path(byte row_Dest, byte column_Dest){
 		// Check SOUTH neighbor
 		if (!READ_B(maze_array_global[current_position_local[ROW_INDEX]][current_position_local[COLUMN_INDEX]], SOUTH)){
 		  south_neighbor_dist = maze_dist_array_global[current_position_local[ROW_INDEX]+1][current_position_local[COLUMN_INDEX]];
-			printf("south_neighbor before: %d\n", south_neighbor_dist);
+			// printf("south_neighbor before: %d\n", south_neighbor_dist);
 			if ((current_dist == (south_neighbor_dist + 1))
 				&& READ_B(maze_array_global[current_position_local[ROW_INDEX] + 1][current_position_local[COLUMN_INDEX]] ,VISITED))
 			{
-				printf("south_neighbor: %d\n", south_neighbor_dist);
+				// printf("south_neighbor: %d\n", south_neighbor_dist);
 				next_position_local = SOUTH;
 			}
 		}
 
-		printf("next_position: %d\n", next_position_local);
+		// printf("next_position: %d\n", next_position_local);
 		// delay_ms(1000);
 
 		if(next_position_local == current_direction_local)
@@ -477,11 +258,11 @@ byte store_path(byte row_Dest, byte column_Dest){
 	// turn off indicator
 	LED1_OFF;
 
-	printf("path in store path: ");
-	for(index = 0; index < path_index; index++){
-		printf("%d ", path_run_global[index]);
-	}
-	printf("\n");
+	// printf("path in store path: ");
+	// for(index = 0; index < path_index; index++){
+	// 	printf("%d ", path_run_global[index]);
+	// }
+	// printf("\n");
 
 
 	// return number of cell
@@ -722,8 +503,8 @@ void Runner_explore(int speed ){
 				else{
 					Driver_go_straight(0,0);
 				}
-				delay_ms(100);
-				Driver_turn_right(0,TURN_RIGHT_ANGLE, speed);
+				// delay_ms(100);
+				Driver_turn_right(0,TURN_RIGHT_ANGLE, TURN_SPEED);
 				Driver_go_straight(0,0);
 				delay_ms(50);
 				Driver_go_straight(90, speed);
@@ -742,9 +523,9 @@ void Runner_explore(int speed ){
 					else{
 						Driver_go_straight(0,0);
 					}
-					delay_ms(100);
+					// delay_ms(100);
 					
-					Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
+					Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
 					Driver_go_straight(0,0);
 					delay_ms(50);
 					Driver_go_straight(90, speed);
@@ -761,11 +542,11 @@ void Runner_explore(int speed ){
 				if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();	
 
-				Driver_turn_left(0,TURN_LEFT_ANGLE, speed);
+				Driver_turn_left(0,TURN_LEFT_ANGLE, TURN_SPEED);
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();		
-				Driver_turn_left(0,TURN_LEFT_ANGLE, speed);
+				Driver_turn_left(0,TURN_LEFT_ANGLE, TURN_SPEED);
 
 				if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();			
@@ -844,9 +625,9 @@ void Runner_explore(int speed ){
 		
 			// Make a u-turn
 			Driver_go_straight(90,speed);
-			Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
+			Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
 			Driver_frontwall_correction();
-			Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
+			Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
 			Driver_go_straight(0,0);
 				
 			STOP_FLAG = 1;
@@ -859,9 +640,9 @@ void Runner_explore(int speed ){
 		
 			// Make a u-turn
 			Driver_go_straight(90,speed);
-			Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
+			Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
 			Driver_frontwall_correction();
-			Driver_turn_left(0, TURN_LEFT_ANGLE, speed);
+			Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
 			Driver_go_straight(0,0);
 				
 			STOP_FLAG = 1;
@@ -873,34 +654,6 @@ void Runner_explore(int speed ){
 	
 } // End method
 	
-
-// 				if((current_position_global[ROW_INDEX] == row_Dest) && (current_position_global[COLUMN_INDEX] == column_Dest)){
-// 				 stop = 1;
-// 			}
-// 			else{
-// 				//maze_initialize(row_Dest,column_Dest);
-// 				CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
-// 			}
-// 	}
-	
-	
-	
-	
-	
-// 	 ===========================================================
-// 		for (i=0;i<MAZE_SIZE; i++)
-// 			for (j=0; j<MAZE_SIZE; j++){
-// 				path_1_global[i*MAZE_SIZE +j]= maze_array_global[i][j];
-// 				path_2_global[i*MAZE_SIZE +j] = maze_dist_array_global[i][j];
-// 		}
-// =======
-			
-// 			// reinitialize the maze
-// 			maze_initialize(row_Dest, column_Dest);
-// 			//set start point and finish point as visited
-// 			CLR_B(maze_array_global[row_Dest][column_Dest], VISITED);
-
-
 
 
 void Runner_run(int speed){
@@ -917,9 +670,9 @@ void Runner_run(int speed){
 		LED2_ON;
 		delay_ms(2000);
 		
-		printf("path in runner_run: ");
+		// printf("path in runner_run: ");
 		for(path_count = 0; path_count < path_index; path_count ++){
-			printf("%d ", path_run_global[path_count]);
+			// printf("%d ", path_run_global[path_count]);
 
 			switch(path_run_global[path_count]){
 				case FRONT:
@@ -954,37 +707,37 @@ void Runner_run(int speed){
 }
 
 
-void Runner_run_onpost(int speed){
+// void Runner_run_onpost(int speed){
 
-		byte path_count;
+// 		byte path_count;
 	
-	  //path index is the size of the path_run_array
-		for(path_count = 0; path_count < path_index; path_count ++){
-			switch(path_run_global[path_count]){
-				case FRONT:
-					if(path_run_global[path_count+1] == RIGHT){
-						Driver_turn_right_onpost(90, speed);
-						Driver_go_straight(90,speed);
-						path_count ++;
-					}
-					else if(path_run_global[path_count+1] == LEFT){
-						Driver_turn_left_onpost(90, speed);
-						Driver_go_straight(90,speed);
-						path_count++;
-					}
-					else
-						Driver_go_straight(180, speed);
-					break;
-				case RIGHT:
-					Driver_turn_right(0, 90, speed);
-					Driver_go_straight(180, speed);
-					break;
-				case LEFT:
-					Driver_turn_left(0, 90, speed);
-					Driver_go_straight(180, speed);
-					break;
-			}
-		}
-		Driver_go_straight(0, 0);
-}
+// 	  //path index is the size of the path_run_array
+// 		for(path_count = 0; path_count < path_index; path_count ++){
+// 			switch(path_run_global[path_count]){
+// 				case FRONT:
+// 					if(path_run_global[path_count+1] == RIGHT){
+// 						Driver_turn_right_onpost(90, speed);
+// 						Driver_go_straight(90,speed);
+// 						path_count ++;
+// 					}
+// 					else if(path_run_global[path_count+1] == LEFT){
+// 						Driver_turn_left_onpost(90, speed);
+// 						Driver_go_straight(90,speed);
+// 						path_count++;
+// 					}
+// 					else
+// 						Driver_go_straight(180, speed);
+// 					break;
+// 				case RIGHT:
+// 					Driver_turn_right(0, 90, speed);
+// 					Driver_go_straight(180, speed);
+// 					break;
+// 				case LEFT:
+// 					Driver_turn_left(0, 90, speed);
+// 					Driver_go_straight(180, speed);
+// 					break;
+// 			}
+// 		}
+// 		Driver_go_straight(0, 0);
+// }
 
