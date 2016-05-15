@@ -18,9 +18,9 @@
 #define E_4	10000 // 10^4
 #define CIRCLE_ANGLE 360
 #define CELL_WIDTH 180
-#define MOUSE_WIDTH 70	// 65mm from left wheels to right wheels
-#define LW_MM2COUNT_RATIO 88  // 1mm = 140 count
-#define RW_MM2COUNT_RATIO 88  // 1mm = 140 count
+#define MOUSE_WIDTH 69	// 65mm from left wheels to right wheels
+#define LW_MM2COUNT_RATIO 90  // 1mm = 140 count
+#define RW_MM2COUNT_RATIO 90  // 1mm = 140 count
 
 // Direction
 #define EAST 0
@@ -42,7 +42,7 @@
 
 #define START_DIRECTION 0
 
-#define MAZE_SIZE 4
+#define MAZE_SIZE 16
 
 #define GENERAL_ARRAY_SIZE 256 
 

@@ -12,7 +12,7 @@
  * Wall is 12mm thick
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
-#define TURN_SPEED 35
+#define TURN_SPEED 45
 #define TURN_LEFT_ANGLE 90
 #define TURN_RIGHT_ANGLE 90
 #define FIRST_RUN 1
@@ -20,9 +20,10 @@
 #define THIRD_RUN 3
 #define RETURN_RUN 5
 #define GOOD_PATH (MAZE_SIZE*MAZE_SIZE - 5)
+#define HALF_CELL 88
 
-#define ROW_DEST 3
-#define COLUMN_DEST 3
+#define ROW_DEST 7
+#define COLUMN_DEST 7
 
 // Declaration off variables
 byte walls_ESWN;
@@ -62,7 +63,7 @@ void maze_floodfill(){
 	byte row, column, counter;
 	byte min_neighbor;
 	
-	for(counter = 0; counter < MAZE_SIZE*MAZE_SIZE;counter++)
+	for(counter = 0; counter <= MAZE_SIZE*MAZE_SIZE-1;counter++)
 		for (row = 0; row< MAZE_SIZE; row++)
 			for (column = 0; column < MAZE_SIZE; column++) {
 				
@@ -161,7 +162,7 @@ byte store_path(byte row_Dest, byte column_Dest){
 	// debug_wall();
 
 	// b. initialize the array for turning 
-	for(index = 0; index < MAZE_SIZE * MAZE_SIZE; index++)
+	for(index = 0; index <= MAZE_SIZE * MAZE_SIZE -1; index++)
 		path_run_global[index] = 0;
 
 
@@ -420,7 +421,7 @@ void Runner_explore(int speed ){
 	
 	
 	// Read first position. This position is given.. we dont need to read sensor
-	Driver_go_straight(90, speed);
+	Driver_go_straight(HALF_CELL, speed);
 	maze_array_global[0][0] = 0x1E;
 	current_position_global[COLUMN_INDEX] ++;
 	
@@ -490,24 +491,24 @@ void Runner_explore(int speed ){
 
 			// Case 1: Next position is in front of current position
 			if (next_position == current_direction_global ){	
-				Driver_go_straight(180, speed);	
+				Driver_go_straight(HALF_CELL*2, speed);	
 				// Dont need to update the current direction
 
 			// Case 2: Next position is on the right of current position
 			} else if (next_position == RIGHT_DIRECT(current_direction_global)){
 
-				Driver_go_straight(90, speed);
+				Driver_go_straight(HALF_CELL, speed);
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();
 				else{
 					Driver_go_straight(0,0);
 				}
-				// delay_ms(100);
+				delay_ms(200);
 				Driver_turn_right(0,TURN_RIGHT_ANGLE, TURN_SPEED);
 				Driver_go_straight(0,0);
-				delay_ms(50);
-				Driver_go_straight(90, speed);
+				delay_ms(100);
+				Driver_go_straight(HALF_CELL, speed);
 
 					
 
@@ -516,19 +517,19 @@ void Runner_explore(int speed ){
 			// Case 3: Next position is at the left	
 			} else if (next_position == LEFT_DIRECT(current_direction_global)){
 				
-					Driver_go_straight(90, speed);
+					Driver_go_straight(HALF_CELL, speed);
 					// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 					if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();
 					else{
 						Driver_go_straight(0,0);
 					}
-					// delay_ms(100);
+					delay_ms(200);
 					
 					Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
 					Driver_go_straight(0,0);
-					delay_ms(50);
-					Driver_go_straight(90, speed);
+					delay_ms(100);
+					Driver_go_straight(HALF_CELL, speed);
 					
 				
 				
@@ -537,7 +538,7 @@ void Runner_explore(int speed ){
 			// Case 4: Next position is in the back. Make a U turn
 			} else if (next_position == BACK_DIRECT(current_direction_global )){
 					
-				Driver_go_straight(90, speed);
+				Driver_go_straight(HALF_CELL, speed);
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
 						Driver_frontwall_correction();	
@@ -550,7 +551,7 @@ void Runner_explore(int speed ){
 
 				if (READ_B(walls_FLBR, FRONT))
 					Driver_frontwall_correction();			
-				Driver_go_straight(90, speed);
+				Driver_go_straight(HALF_CELL, speed);
 				
 				
 				current_direction_global = BACK_DIRECT(current_direction_global);
@@ -624,7 +625,7 @@ void Runner_explore(int speed ){
 			delay_ms(1000);
 		
 			// Make a u-turn
-			Driver_go_straight(90,speed);
+			Driver_go_straight(HALF_CELL, speed);
 			Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
 			Driver_frontwall_correction();
 			Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
@@ -639,7 +640,7 @@ void Runner_explore(int speed ){
 			delay_ms(1000);
 		
 			// Make a u-turn
-			Driver_go_straight(90,speed);
+			Driver_go_straight(HALF_CELL, speed);
 			Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
 			Driver_frontwall_correction();
 			Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
@@ -654,7 +655,6 @@ void Runner_explore(int speed ){
 	
 } // End method
 	
-
 
 void Runner_run(int speed){
 
@@ -707,6 +707,7 @@ void Runner_run(int speed){
 }
 
 
+
 // void Runner_run_onpost(int speed){
 
 // 		byte path_count;
@@ -717,12 +718,12 @@ void Runner_run(int speed){
 // 				case FRONT:
 // 					if(path_run_global[path_count+1] == RIGHT){
 // 						Driver_turn_right_onpost(90, speed);
-// 						Driver_go_straight(90,speed);
+// 						Driver_go_straight(HALF_CELL, speed);
 // 						path_count ++;
 // 					}
 // 					else if(path_run_global[path_count+1] == LEFT){
 // 						Driver_turn_left_onpost(90, speed);
-// 						Driver_go_straight(90,speed);
+// 						Driver_go_straight(HALF_CELL, speed);
 // 						path_count++;
 // 					}
 // 					else

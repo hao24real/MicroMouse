@@ -8,7 +8,7 @@ byte current_direction_global;
 byte current_position_global[2];
 byte maze_array_global[MAZE_SIZE][MAZE_SIZE];
 byte maze_dist_array_global[MAZE_SIZE][MAZE_SIZE];
-byte path_1_global[MAZE_SIZE*MAZE_SIZE];
+//byte path_1_global[MAZE_SIZE*MAZE_SIZE];
 byte general_purpose_array_1[GENERAL_ARRAY_SIZE];
 byte general_purpose_array_2[GENERAL_ARRAY_SIZE];
 byte path_run_global[MAZE_SIZE * MAZE_SIZE];
@@ -52,7 +52,7 @@ int main(void) {
 		switch (MODE){
 		
 			case MODE_EXPLORE:
-																Runner_explore(80);
+																Runner_explore(70);
 																MODE = MODE_SPEED_RUN;
 																LED1_ON;
 																break;
