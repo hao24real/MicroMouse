@@ -26,8 +26,8 @@
 
 #define FL_THRESHOLD 220
 #define FR_THRESHOLD 230
-#define DL_THRESHOLD 300
-#define DR_THRESHOLD 250
+#define DL_THRESHOLD 270
+#define DR_THRESHOLD 210
 
 
 

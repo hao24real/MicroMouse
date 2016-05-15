@@ -52,7 +52,7 @@ int main(void) {
 		switch (MODE){
 		
 			case MODE_EXPLORE:
-																Runner_explore(60);
+																Runner_explore(70);
 																MODE = MODE_SPEED_RUN;
 																LED1_ON;
 																break;

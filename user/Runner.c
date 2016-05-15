@@ -12,7 +12,7 @@
  * Wall is 12mm thick
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
-#define TURN_SPEED 60
+#define TURN_SPEED 70
 #define TURN_LEFT_ANGLE 90
 #define TURN_RIGHT_ANGLE 90
 #define FIRST_RUN 1
@@ -403,19 +403,8 @@ void Runner_explore(int speed ){
 			// Case 2: Next position is on the right of current position
 			} else if (next_position == RIGHT_DIRECT(current_direction_global)){
 
-				Driver_go_straight(HALF_CELL, speed);
-				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
-				if (READ_B(walls_FLBR, FRONT))
-						Driver_frontwall_correction();
-				else{
-					Driver_go_straight(0,0);
-				}
-				delay_ms(400);
-				Driver_turn_right(0,TURN_RIGHT_ANGLE, TURN_SPEED);
-				Driver_go_straight(0,0);
-				delay_ms(200);
-				Driver_go_straight(HALF_CELL, speed);
 
+				Driver_turn_right(HALF_CELL,TURN_RIGHT_ANGLE, TURN_SPEED);
 					
 
 				current_direction_global = next_position;
@@ -423,22 +412,8 @@ void Runner_explore(int speed ){
 			// Case 3: Next position is at the left	
 			} else if (next_position == LEFT_DIRECT(current_direction_global)){
 				
-					Driver_go_straight(HALF_CELL, speed);
-					// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
-					if (READ_B(walls_FLBR, FRONT))
-						Driver_frontwall_correction();
-					else{
-						Driver_go_straight(0,0);
-					}
-					delay_ms(400);
-					
-					Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
-					Driver_go_straight(0,0);
-					delay_ms(200);
-					Driver_go_straight(HALF_CELL, speed);
-					
-				
-				
+				Driver_turn_left(HALF_CELL, TURN_LEFT_ANGLE, TURN_SPEED);
+	
 				current_direction_global = next_position;
 		
 			// Case 4: Next position is in the back. Make a U turn
@@ -447,7 +422,12 @@ void Runner_explore(int speed ){
 				Driver_go_straight(HALF_CELL, speed);
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
 				if (READ_B(walls_FLBR, FRONT))
-						Driver_frontwall_correction();	
+						Driver_frontwall_correction();
+				else{
+						Driver_go_straight(0,0);
+						delay_ms(200);
+				}
+						
 
 				Driver_turn_left(0,TURN_LEFT_ANGLE, TURN_SPEED);
 				// Now we are in the center of 1 cell. Check if there is a wall in front of us for make correction
