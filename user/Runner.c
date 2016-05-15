@@ -21,8 +21,8 @@
 #define RETURN_RUN 5
 #define GOOD_PATH (MAZE_SIZE*MAZE_SIZE - 5)
 
-#define ROW_DEST 7
-#define COLUMN_DEST 7
+#define ROW_DEST 3
+#define COLUMN_DEST 3
 
 // Declaration off variables
 byte walls_ESWN;
