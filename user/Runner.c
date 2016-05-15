@@ -12,7 +12,7 @@
  * Wall is 12mm thick
  * So the "road" is 180mm - (12mm/2)*2 = 168mm
  */
-#define TURN_SPEED 45
+#define TURN_SPEED 60
 #define TURN_LEFT_ANGLE 90
 #define TURN_RIGHT_ANGLE 90
 #define FIRST_RUN 1
@@ -20,26 +20,26 @@
 #define THIRD_RUN 3
 #define RETURN_RUN 5
 #define GOOD_PATH (MAZE_SIZE*MAZE_SIZE - 5)
-#define HALF_CELL 88
+#define HALF_CELL 86
 
 #define ROW_DEST 7
 #define COLUMN_DEST 7
 
 // Declaration off variables
-byte walls_ESWN;
-byte walls_FLBR;
+int walls_ESWN;
+int walls_FLBR;
 
 
 // Next interested position
-byte next_position;
+int next_position;
 // neighbor value
-byte next_dist, east_neighbor, south_neighbor, west_neighbor, north_neighbor;
+int next_dist, east_neighbor, south_neighbor, west_neighbor, north_neighbor;
 
-byte path_index;
+int path_index;
 	
 
-void maze_initialize(byte row_dest, byte column_dest){
-	byte row, column;
+void maze_initialize(int row_dest, int column_dest){
+	int row, column;
 	for (row = 0; row< MAZE_SIZE; row++){
 		for (column = 0; column < MAZE_SIZE; column++){
 				maze_dist_array_global[row][column] = abs(row - row_dest) + abs(column - column_dest);
@@ -48,8 +48,8 @@ void maze_initialize(byte row_dest, byte column_dest){
 }
 
 
-void maze_initialize_max(byte row_dest, byte column_dest){
-	byte row, column;
+void maze_initialize_max(int row_dest, int column_dest){
+	int row, column;
 	for (row = 0; row< MAZE_SIZE; row++){
 		for (column = 0; column < MAZE_SIZE; column++){
 				maze_dist_array_global[row][column] =  MAZE_SIZE * MAZE_SIZE -1;
@@ -60,8 +60,8 @@ void maze_initialize_max(byte row_dest, byte column_dest){
 
 void maze_floodfill(){
 	
-	byte row, column, counter;
-	byte min_neighbor;
+	int row, column, counter;
+	int min_neighbor;
 	
 	for(counter = 0; counter <= MAZE_SIZE*MAZE_SIZE-1;counter++)
 		for (row = 0; row< MAZE_SIZE; row++)
@@ -126,11 +126,11 @@ void maze_floodfill(){
  * This Method find and store the shortest path from begining to center
  * Return the number of cell need to inoder to go to center 
  */
-byte store_path(byte row_Dest, byte column_Dest){
+int store_path(int row_Dest, int column_Dest){
 	
-	byte index, current_dist, next_position_local, current_position_local[2];
-	byte east_neighbor_dist, west_neighbor_dist, south_neighbor_dist, north_neighbor_dist;
-	byte current_direction_local = EAST;
+	int index, current_dist, next_position_local, current_position_local[2];
+	int east_neighbor_dist, west_neighbor_dist, south_neighbor_dist, north_neighbor_dist;
+	int current_direction_local = EAST;
 	
 	LED1_ON;
 	
@@ -273,9 +273,9 @@ byte store_path(byte row_Dest, byte column_Dest){
 /* This is another method_ Disavange: change alot global variable. unoptimize
 void store_path(){
 	
-	byte index, index2, current_dist, next_position_local, current_position_local[2];
-	byte east_neighbor_dist, west_neighbor_dist, south_neighbor_dist, north_neighbor_dist;
-	byte current_direction_local = EAST;
+	int index, index2, current_dist, next_position_local, current_position_local[2];
+	int east_neighbor_dist, west_neighbor_dist, south_neighbor_dist, north_neighbor_dist;
+	int current_direction_local = EAST;
 >>>>>>> 770b1ca67c7e836bbdbe7303bbf7310ace697688
 	
 	LED1_ON;
@@ -396,10 +396,10 @@ void store_path(){
  */
 void Runner_explore(int speed ){
 
-	byte STOP_FLAG = 0;
-	byte RUN = FIRST_RUN;
-	byte path_count;
-	byte row_Dest = ROW_DEST, column_Dest = COLUMN_DEST;
+	int STOP_FLAG = 0;
+	int RUN = FIRST_RUN;
+	int path_count;
+	int row_Dest = ROW_DEST, column_Dest = COLUMN_DEST;
 	
 
 	
@@ -504,10 +504,10 @@ void Runner_explore(int speed ){
 				else{
 					Driver_go_straight(0,0);
 				}
-				delay_ms(200);
+				delay_ms(400);
 				Driver_turn_right(0,TURN_RIGHT_ANGLE, TURN_SPEED);
 				Driver_go_straight(0,0);
-				delay_ms(100);
+				delay_ms(200);
 				Driver_go_straight(HALF_CELL, speed);
 
 					
@@ -524,11 +524,11 @@ void Runner_explore(int speed ){
 					else{
 						Driver_go_straight(0,0);
 					}
-					delay_ms(200);
+					delay_ms(400);
 					
 					Driver_turn_left(0, TURN_LEFT_ANGLE, TURN_SPEED);
 					Driver_go_straight(0,0);
-					delay_ms(100);
+					delay_ms(200);
 					Driver_go_straight(HALF_CELL, speed);
 					
 				
@@ -658,7 +658,7 @@ void Runner_explore(int speed ){
 
 void Runner_run(int speed){
 
-		byte path_count;
+		int path_count;
 	
 	  //path index is the size of the path_run_array
 	
@@ -710,7 +710,7 @@ void Runner_run(int speed){
 
 // void Runner_run_onpost(int speed){
 
-// 		byte path_count;
+// 		int path_count;
 	
 // 	  //path index is the size of the path_run_array
 // 		for(path_count = 0; path_count < path_index; path_count ++){
