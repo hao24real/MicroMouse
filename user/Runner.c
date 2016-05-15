@@ -403,9 +403,12 @@ void Runner_explore(int speed ){
 			// Case 2: Next position is on the right of current position
 			} else if (next_position == RIGHT_DIRECT(current_direction_global)){
 
-
-				Driver_turn_right(HALF_CELL,TURN_RIGHT_ANGLE, TURN_SPEED);
+				if(MODE == MODE_EXPLORE)
+					Driver_turn_right(HALF_CELL,TURN_RIGHT_ANGLE, TURN_SPEED);
+				else{
 					
+				}
+
 
 				current_direction_global = next_position;
 				

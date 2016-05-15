@@ -56,12 +56,18 @@ int main(void) {
 																MODE = MODE_SPEED_RUN;
 																LED1_ON;
 																break;
+			case MODE_EXPLORE_PIVOT:
+																Runner_explore(60);
+																MODE = MODE_SPEED_RUN;
+																LED2_on
+																break;
 			case MODE_SPEED_RUN:
 																Runner_run(180);
 																MODE = MODE_DEFAULT;
-																LED2_ON;
+																LED1_ON;
+																LED2_on
 																break;
-			case MODE_2:							
+			case MODE_3:							
 																//Driver_check_walls();
 																//printf("<FLSensor: %d, FRSensor: %d>", FLSensor, FRSensor);
 																//printf("%d\n", FLSensor);
@@ -82,14 +88,14 @@ int main(void) {
 																LED3_ON;
 																MODE = MODE_DEFAULT;
 																break;
-			case MODE_3:
+			case MODE_4:
 					//Runner_run_onpost(80);
 																Driver_go_straight(720, 20);
 																Driver_go_straight(0,0);
 																LED4_ON;	
 																MODE = MODE_DEFAULT;
 																break;
-			case MODE_4:
+			case MODE_5:
 				//Runner_run_onpost(80);
 																Driver_turn_right(0, 90, 30);
 																Driver_go_straight(0,0);
