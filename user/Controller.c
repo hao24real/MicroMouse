@@ -105,12 +105,12 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 		if (left_speed == right_speed){
 			
 			// check wall infomation
-			readSensor();;
+			readSensor();
 				// CASE 1: correct position base on both wall
 				// For reliable sensor to correct position. we need to read the cloe value only
 			if ((DLSensor > (LEFT_WALL_DISTANCE-50))&&(DRSensor > (RIGHT_WALL_DISTANCE-50))){
 				if (temp_cnt >200){				
-					ERR = (DLSensor - DRSensor - (LEFT_WALL_DISTANCE - RIGHT_WALL_DISTANCE))/25;
+					ERR = (DLSensor - DRSensor - (LEFT_WALL_DISTANCE - RIGHT_WALL_DISTANCE))/23;
 					// Check if error is valid for correction ( too far from wall)
 					ERR_LEFT_TO_PID = ERR;
 					ERR_RIGHT_TO_PID = -ERR;
@@ -121,7 +121,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				// CASE 2: have left wall
 			} else	if (DLSensor > (LEFT_WALL_DISTANCE-50)){
 				if (temp_cnt >200){				
-					ERR = (DLSensor - LEFT_WALL_DISTANCE)/25;
+					ERR = (DLSensor - LEFT_WALL_DISTANCE)/23;
 					// Check if error is valid for correction ( too far from wall)		
 					ERR_LEFT_TO_PID = ERR;
 					ERR_RIGHT_TO_PID = -ERR;
@@ -132,7 +132,7 @@ void Controller_run(int left_distance, int right_distance, int left_speed, int r
 				// Case 3: Use right wall for correction
 			} else if (DRSensor > (RIGHT_WALL_DISTANCE-50)){
 				if (temp_cnt >200){				
-					ERR = (DRSensor - RIGHT_WALL_DISTANCE)/25;
+					ERR = (DRSensor - RIGHT_WALL_DISTANCE)/23;
 					// Check if error is valid for correction ( too far from wall)
 					ERR_LEFT_TO_PID = -ERR;
 					ERR_RIGHT_TO_PID = ERR;
@@ -253,9 +253,6 @@ byte Controller_check_walls(){
 	// Rotate the last 4 bits according to current direction before return
 	//((ret_val&0x0F)>>(4-current_direction_global))|(ret_val<<current_direction_global);
 }
-
-
-
 
 
 /*
@@ -451,8 +448,8 @@ void Controller_frontwall_corecttion(){
 	
 	while(count < 400){
 		readSensor();	
-		left_err = (FRONT_LEFT_WALL_DISTANCE - FLSensor)/25; // 20 work ok
-		right_err = (FRONT_RIGHT_WALL_DISTANCE - FRSensor)/25; // 20 work ok
+		left_err = (FRONT_LEFT_WALL_DISTANCE - FLSensor)/20; // 20 work ok
+		right_err = (FRONT_RIGHT_WALL_DISTANCE - FRSensor)/20; // 20 work ok
 		if (left_err > 15) left_err = 15;
 		if (left_err < -15) left_err = -15;
 		if (right_err > 15) right_err = 15;
